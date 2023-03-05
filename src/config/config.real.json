@@ -1,0 +1,12 @@
+{
+  "mode": "PRODUCTION",
+  "roleNFT": "0xeD24FC36d5Ee211Ea25A80239Fb8C4Cfd80f12Ee",
+  "dao": "0x990Ffa771f2723dEcaB8875545226CDDa652B3B9",
+  "chainId": 137,
+  "network": 137,
+  "chainName": "Polygon Mainnet",
+  "chainRpcUrl": "https://polygon-rpc.com/",
+  "chainBlockExplorerUrls": ["https://polygonscan.com/"], 
+  "apiBaseURL": "https://app.gamium.world/api/v1/"
+}
+
