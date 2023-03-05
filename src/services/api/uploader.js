@@ -99,6 +99,40 @@ export const createAndUploadNFTMetaData = async (user, ipfsUrl, imgName) => {
   return response
 }
 
+export const createAndUploadProposalMetaData = async (
+  title,
+  description,
+  fileHash,
+) => {
+  let data = {
+    title: title,
+    description: description,
+    file: fileHash,
+  }
+
+  let pinataData = {
+    pinataMetadata: {
+      name: title + '.json',
+      keyvalues: {},
+    },
+    pinataContent: data,
+  }
+
+  let response = await axios.post(
+    'https://api.pinata.cloud/pinning/pinJSONToIPFS',
+    pinataData,
+    {
+      headers: {
+        // eslint-disable-next-line camelcase
+        pinata_api_key: config.pinataApiKey,
+        // eslint-disable-next-line camelcase
+        pinata_secret_api_key: config.pinataSecretApiKey,
+      },
+    },
+  )
+  return response
+}
+
 export const uploadIPFS = async (user, file) => {
   const imgHash = await _uploadPinata(file)
   const metaDataHash = await createAndUploadNFTMetaData(
@@ -109,6 +143,23 @@ export const uploadIPFS = async (user, file) => {
   return metaDataHash
 }
 
-export const uploadProposaltoIPFS = async (title, description, file) => {
-  console.log(title, description, file)
+export const uploadProposaltoIPFS = async (
+  title,
+  description,
+  file,
+  isPublic,
+) => {
+  let fileHash = null
+  if (file) {
+    fileHash = await _uploadPinata(file)
+  }
+
+  const metaDataHash = await createAndUploadProposalMetaData(
+    title,
+    description,
+    fileHash,
+  )
+
+  console.log(metaDataHash, isPublic)
+  return metaDataHash
 }

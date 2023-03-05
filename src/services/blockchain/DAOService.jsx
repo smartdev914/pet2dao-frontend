@@ -38,10 +38,10 @@ class DAOService extends BlockchainService {
     }
   }
 
-  createProposal = async (from, _contentURI) => {
+  createProposal = async (from, _contentURI, _isPublic) => {
     try {
       const dataAbi = this.contract.methods
-        .createProposal(_contentURI)
+        .createProposal(_contentURI, _isPublic)
         .encodeABI()
       const txHash = await this.signTransaction(from, dataAbi, 0)
       return txHash

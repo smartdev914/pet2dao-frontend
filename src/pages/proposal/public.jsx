@@ -9,7 +9,7 @@ function PublicProposal() {
         <SideBar activeId="public" />
         <VStack paddingLeft="32px">
           <Flex>
-            <Text fontSize="28px" color="whiteAlpha.900">
+            <Text fontSize="28px" fontFamily="geomatik" color="whiteAlpha.900">
               Public Proposal
             </Text>
           </Flex>
