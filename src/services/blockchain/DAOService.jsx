@@ -10,7 +10,10 @@ class DAOService extends BlockchainService {
     this.contract = new this.web3.eth.Contract(DAOAbi, DAOAddress)
   }
 
-  getAllProposal = async () => this.contract.methods.getAllProposal().call()
+  getAllProposal = async (start, end) =>
+    this.contract.methods.getAllProposal(start, end).call()
+
+  getProposalCount = async () => this.contract.methods.getProposalCount().call()
 
   getPermissionsOfLevel = async (level) =>
     this.contract.methods.getPermissionsOfLevel(level).call()

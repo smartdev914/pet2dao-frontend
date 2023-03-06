@@ -19,6 +19,7 @@ import { ModalContent } from './style'
 import { RoundButton } from 'components'
 import PropTypes from 'prop-types'
 import config from 'config'
+import { fetchFromIPFS } from 'services/api/uploader'
 
 function NFTCard({ nft, mint }) {
   const [metaData, setMetaData] = useState('')
@@ -27,17 +28,8 @@ function NFTCard({ nft, mint }) {
   console.log(nft, mint)
   useEffect(() => {
     ;(async function () {
-      try {
-        const res = await fetch(
-          `https://gateway.moralisipfs.com/ipfs/${nft.metaDataURI}`,
-        )
-        const data = await res.json()
-        if (data) {
-          setMetaData(data)
-        }
-      } catch (e) {
-        console.log(e)
-      }
+      const data = await fetchFromIPFS(nft.metaDataURI)
+      setMetaData(data)
     })()
   }, [])
 

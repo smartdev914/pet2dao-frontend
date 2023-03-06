@@ -5,6 +5,7 @@ import RoundButton from './RoundButton'
 import SideBar from './SideBar'
 import CustomTable from './CustomTable'
 import NFTCard from './NFTCard'
+import ProposalPanel from './ProposalPanel'
 
 export {
   ConnectWalletButton,
@@ -14,4 +15,5 @@ export {
   SideBar,
   CustomTable,
   NFTCard,
+  ProposalPanel,
 }

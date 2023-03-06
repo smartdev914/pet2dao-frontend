@@ -112,7 +112,7 @@ export const createAndUploadProposalMetaData = async (
 
   let pinataData = {
     pinataMetadata: {
-      name: title + '.json',
+      name: title.slice(0, 10) + '.json',
       keyvalues: {},
     },
     pinataContent: data,
@@ -162,4 +162,16 @@ export const uploadProposaltoIPFS = async (
 
   console.log(metaDataHash, isPublic)
   return metaDataHash
+}
+
+export const fetchFromIPFS = async (hash) => {
+  try {
+    const res = await fetch(`https://gateway.moralisipfs.com/ipfs/${hash}`)
+    const data = await res.json()
+    if (data) {
+      return data
+    }
+  } catch (e) {
+    console.log(e)
+  }
 }
