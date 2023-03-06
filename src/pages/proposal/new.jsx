@@ -15,10 +15,12 @@ import {
 } from '@chakra-ui/react'
 import { useWeb3React } from '@web3-react/core'
 import { AttachmentIcon } from '@chakra-ui/icons'
+import { useDispatch, useSelector } from 'react-redux'
 import SideBar from './sidebar'
 import { uploadProposaltoIPFS } from 'services/api/uploader'
 import { daoService } from 'services/blockchain/DAOService'
 import { client } from 'services/api/useApi'
+import { createProposal } from 'store/actions/proposalAction'
 
 const visibleType = {
   private: 'private',
@@ -33,6 +35,8 @@ function NewProposal() {
   const [visible, setVisible] = useState(visibleType.private)
   const [isLoading, setIsLoading] = useState(false)
 
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.userReducer)
   const { account } = useWeb3React()
 
   const onTitleChange = (e) => {
@@ -108,6 +112,11 @@ function NewProposal() {
     setIsLoading(false)
 
     if (hash) {
+      dispatch(createProposal(user.id, ipfsHash, isPublic))
+      setData('')
+      setTitle('')
+      setDescription('')
+      setVisible(visibleType.private)
       toast({
         title: `New proposal created successfully`,
         position: 'top-right',

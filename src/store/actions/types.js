@@ -5,4 +5,6 @@ export const actionTypes = {
   updateAllEmployee: 'UpdateAllEmployee',
   updateEmployee: 'UpdateEmployee',
   updateAllNFT: 'UpdateAllNFT',
+  updateAllPublicProposal: 'UpdateAllPublic',
+  updateAllPrivateProposal: 'UpdateAllPrivate',
 }

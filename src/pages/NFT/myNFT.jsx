@@ -16,7 +16,7 @@ function MyNFT() {
         Authorization: token,
       },
     }
-    client(`/api/nft/findOneByUserID/${user.id}`, 'DELETE', customOption)
+    client(`/api/nft/findOneByUserID/${user.id}`, 'GET', customOption)
       .then(function (response) {
         if (response.data) {
           setIsApproved(response.data.isApproved)

@@ -17,6 +17,7 @@ const SideBar = ({ activeId }) => {
       borderRadius="12px"
       borderColor="borderColor"
       color="white"
+      maxH={'500px'}
     >
       <VStack w="100%">
         <Image name="logo" src={Logo} height="70px" my="20px" />

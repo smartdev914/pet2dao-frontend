@@ -1,49 +1,30 @@
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Layout, ProposalPanel } from 'components'
 import { Flex, Text, VStack } from '@chakra-ui/react'
+import { useDispatch, useSelector } from 'react-redux'
 import SideBar from './sidebar'
-import { daoService } from 'services/blockchain/DAOService'
-import { fetchFromIPFS } from 'services/api/uploader'
-import { findOneByAccountAddr } from 'store/actions/employeeAction'
+import { useNavigate } from 'react-router'
+// import { daoService } from 'services/blockchain/DAOService'
+import { getAllPublicProposal } from 'store/actions/proposalAction'
 
 function PublicProposal() {
-  const [proposal, setProposal] = useState([])
-  const fetchProposal = async (proposal) => {
-    return new Promise((resolve) => {
-      ;(async () => {
-        try {
-          const data = await fetchFromIPFS(proposal.contentURL)
-          const _employee = await findOneByAccountAddr(proposal.creator)
-          const _proposal = {
-            ...proposal,
-            metaData: { ...data },
-            employee: _employee,
-          }
-          resolve(_proposal)
-        } catch (e) {
-          console.log(e)
-        }
-      })()
-    })
-  }
+  // const [proposal, setProposal] = useState([])
+  const dispatch = useDispatch()
+  const publicProposal = useSelector(
+    (state) => state.proposalReducer,
+  ).publicProposal
 
-  const getAllProposal = async () => {
-    const totalCount = await daoService.getProposalCount()
-    const _proposals = await daoService.getAllProposal(0, totalCount)
-    const publicProposal = _proposals.filter((item) => item.isPublic)
-    const promises = []
+  const navigate = useNavigate()
 
-    for (let i = 0; i < publicProposal.length; i++) {
-      promises.push(fetchProposal(publicProposal[i]))
-    }
-    const result = await Promise.all(promises)
-    console.log(result)
-    setProposal(result)
+  const handleClick = (index) => {
+    console.log(publicProposal[index])
+    navigate(`/proposal/detail/${index}`, { viewType: 'public' })
   }
 
   useEffect(() => {
-    getAllProposal()
-  }, [])
+    dispatch(getAllPublicProposal())
+  }, [dispatch])
+
   return (
     <Layout activeId="proposal">
       <Flex mt="24px">
@@ -71,8 +52,13 @@ function PublicProposal() {
               Public Proposal
             </Text>
           </Flex>
-          {proposal.map((item) => (
-            <ProposalPanel key={item.contentURL} proposal={item} />
+          {publicProposal.map((item, index) => (
+            <ProposalPanel
+              key={item.contentURL}
+              proposal={item}
+              index={index}
+              onClick={handleClick}
+            />
           ))}
         </VStack>
       </Flex>

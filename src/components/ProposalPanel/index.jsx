@@ -4,8 +4,7 @@ import { VStack, Flex, Text, Badge } from '@chakra-ui/react'
 // import { RoundButton } from 'components'
 import PropTypes from 'prop-types'
 
-function ProposalPanel({ proposal, onClick }) {
-  console.log(proposal, onClick)
+function ProposalPanel({ proposal, onClick, index }) {
   const { isRejected, level, employee, metaData } = proposal
   return (
     <VStack
@@ -20,6 +19,7 @@ function ProposalPanel({ proposal, onClick }) {
       _hover={{
         borderColor: 'secondaryBorderColor',
       }}
+      onClick={() => onClick(index)}
     >
       <Flex
         color="white"
@@ -69,6 +69,7 @@ function ProposalPanel({ proposal, onClick }) {
 
 ProposalPanel.propTypes = {
   proposal: PropTypes.object.isRequired,
+  index: PropTypes.any.isRequired,
   onClick: PropTypes.func,
 }
 
