@@ -12,7 +12,7 @@ import {
   PublicProposal,
   PrivateProposal,
   NewProposal,
-  MyNFT,
+  ViewNFT,
   MintNFT,
   DepartmentRole,
   Employee,
@@ -51,7 +51,7 @@ root.render(
               <Route path="/admin/nft" element={<NFT />} />
               <Route path="/admin/permission" element={<Permission />} />
               <Route path="/admin/depart_role" element={<DepartmentRole />} />
-              <Route path="/nft/mynft" element={<MyNFT />} />
+              <Route path="/nft/viewnft" element={<ViewNFT />} />
               <Route path="/nft/mint" element={<MintNFT />} />
               <Route path="/proposal/public" element={<PublicProposal />} />
               <Route path="/proposal/private" element={<PrivateProposal />} />

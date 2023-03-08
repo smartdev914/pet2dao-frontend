@@ -11,20 +11,16 @@ import {
   TabPanel,
   SimpleGrid,
   Spinner,
-  useToast,
 } from '@chakra-ui/react'
-import { useWeb3React } from '@web3-react/core'
 import SideBar from './sidebar'
 import { client } from 'services/api/useApi'
 import { roleNFTService } from 'services/blockchain/roleNFTService'
 import { findOneByAccountAddr } from 'store/actions/employeeAction'
 
-function NFT() {
+function ViewNFT() {
   const [pendingNFT, setPendingNFT] = useState([])
   const [approvedNFT, setApprovedNFT] = useState([])
   const [isLoading, setIsLoading] = useState([])
-  const { account } = useWeb3React()
-  const toast = useToast()
 
   const fetchPendingNFT = async () => {
     const token = JSON.parse(localStorage.getItem('token'))
@@ -43,58 +39,6 @@ function NFT() {
       .catch(function (error) {
         console.error(error)
       })
-  }
-
-  const updateDBNFT = async (id, customData) => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-      data: { ...customData },
-    }
-
-    client(`/api/nft/update/${id}`, 'PUT', customOption)
-      .then(function (response) {
-        if (response.status === 200) {
-          toast({
-            title: `NFT minted Successfully.`,
-            position: 'top-right',
-            isClosable: true,
-          })
-        } else {
-          toast({
-            title: 'Error occurs in the Server',
-            position: 'top-right',
-            isClosable: true,
-          })
-        }
-      })
-      .catch(function (error) {
-        console.error(error)
-      })
-  }
-
-  const handleMint = async (to, _tokenURI, _department, _role, nftId) => {
-    console.log(account, to, _tokenURI, _department, _role)
-    const hash = await roleNFTService.mintNFT(
-      account,
-      to,
-      _tokenURI,
-      _department,
-      _role,
-    )
-    if (hash) {
-      updateDBNFT(nftId, { isApproved: true })
-      fetchPendingNFT()
-      fetchMintedNFT()
-    } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
-    }
   }
 
   const fetchNFTByID = async (ID) => {
@@ -136,9 +80,9 @@ function NFT() {
   }, [])
 
   return (
-    <Layout activeId="manager">
+    <Layout activeId="viewnft">
       <Flex mt="24px">
-        <SideBar activeId="nft" />
+        <SideBar activeId="viewnft" />
         <VStack paddingLeft="32px" width={'78%'}>
           <Flex pb={'20px'} direction="column">
             <Text fontSize="28px" textAlign={'center'} color="whiteAlpha.900">
@@ -243,7 +187,7 @@ function NFT() {
                   {pendingNFT
                     .filter((nft) => !nft.isApproved)
                     .map((nft) => (
-                      <NFTCard key={nft.id} nft={nft} mint={handleMint} />
+                      <NFTCard key={nft.id} nft={nft} />
                     ))}
                 </SimpleGrid>
               </TabPanel>
@@ -255,4 +199,4 @@ function NFT() {
   )
 }
 
-export default NFT
+export default ViewNFT

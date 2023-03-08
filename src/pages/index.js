@@ -1,7 +1,7 @@
 import PublicProposal from './proposal/public'
 import PrivateProposal from './proposal/private'
 import NewProposal from './proposal/new'
-import MyNFT from './NFT/myNFT'
+import ViewNFT from './NFT/nft'
 import MintNFT from './NFT/mint'
 import DepartmentRole from './admin/department_role'
 import Employee from './admin/employee'
@@ -14,7 +14,7 @@ export {
   PublicProposal,
   NewProposal,
   PrivateProposal,
-  MyNFT,
+  ViewNFT,
   MintNFT,
   DepartmentRole,
   Employee,

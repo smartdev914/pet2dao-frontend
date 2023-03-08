@@ -3,9 +3,11 @@ import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { VStack, Image, Text, Box } from '@chakra-ui/react'
 import Logo from 'assets/LOGO2.png'
+import { useSelector } from 'react-redux'
 
 const SideBar = ({ activeId }) => {
   const navigate = useNavigate()
+  const user = useSelector((state) => state.userReducer)
   return (
     <VStack
       dir="column"
@@ -33,26 +35,27 @@ const SideBar = ({ activeId }) => {
           fontSize="18px"
           px="24px"
           py="8px"
-          borderLeft={activeId === 'mynft' ? '4px' : 'none'}
+          borderLeft={activeId === 'viewnft' ? '4px' : 'none'}
           onClick={() => {
-            navigate('/nft/mynft')
+            navigate('/nft/viewnft')
           }}
         >
-          My NFT
+          NFTs
         </Box>
-
-        <Box
-          width="100%"
-          fontSize="18px"
-          px="24px"
-          py="8px"
-          borderLeft={activeId === 'mint' ? '4px' : 'none'}
-          onClick={() => {
-            navigate('/nft/mint')
-          }}
-        >
-          Mint NFT
-        </Box>
+        {user.isManager && (
+          <Box
+            width="100%"
+            fontSize="18px"
+            px="24px"
+            py="8px"
+            borderLeft={activeId === 'mint' ? '4px' : 'none'}
+            onClick={() => {
+              navigate('/nft/mint')
+            }}
+          >
+            Mint NFT
+          </Box>
+        )}
       </VStack>
     </VStack>
   )

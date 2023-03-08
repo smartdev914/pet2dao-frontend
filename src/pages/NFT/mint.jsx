@@ -25,6 +25,22 @@ function MintNFT() {
   const navigate = useNavigate()
 
   const requestMint = async () => {
+    if (user.permission === 'admin') {
+      toast({
+        title: `You are administrator, you don't need to mint`,
+        position: 'top-right',
+        isClosable: true,
+      })
+      return
+    } else if (!user.isManager) {
+      toast({
+        title: `You are not manager`,
+        position: 'top-right',
+        isClosable: true,
+      })
+      return
+    }
+
     const token = JSON.parse(localStorage.getItem('token'))
     setIsLoading(true)
     const ipfsHash = await uploadIPFS(user, mydata.file)

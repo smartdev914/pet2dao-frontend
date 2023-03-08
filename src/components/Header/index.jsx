@@ -57,13 +57,13 @@ const Header = ({ activeId }) => {
             >
               <Text fontSize="18px">Proposal</Text>
             </Box>
-            {user.isManager && (
+            {user.isApproved && (
               <Box
                 px={6}
                 py={4}
-                borderBottom={activeId === 'nft' ? '2px' : 'now'}
+                borderBottom={activeId === 'viewnft' ? '2px' : 'now'}
                 onClick={() => {
-                  navigate('/nft/mynft')
+                  navigate('/nft/viewnft')
                 }}
               >
                 <Text fontSize="18px">NFT</Text>
