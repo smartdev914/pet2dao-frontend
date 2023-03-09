@@ -221,7 +221,7 @@ function CustomTable({ columns, data }) {
 
 CustomTable.propTypes = {
   columns: PropTypes.any,
-  data: PropTypes.string.isRequired,
+  data: PropTypes.array.isRequired,
 }
 
 export default CustomTable

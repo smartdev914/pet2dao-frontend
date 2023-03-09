@@ -7,7 +7,6 @@ const initialState = {
 }
 
 const employeeReducer = (state = initialState, action) => {
-  console.log('employeeRe', action.data)
   switch (action.type) {
     case actionTypes.updateAllDepartment:
       return {

@@ -23,7 +23,6 @@ function NFTCard({ nft, mint }) {
   const [metaData, setMetaData] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
 
-  console.log(nft, mint)
   useEffect(() => {
     ;(async function () {
       try {
@@ -40,7 +39,8 @@ function NFTCard({ nft, mint }) {
     })()
   }, [])
 
-  const handleMint = async () => {
+  const handleMint = async (event) => {
+    event.stopPropagation()
     await mint(
       nft.employee.accountAddr,
       config.baseUrl + nft.metaDataURI,
@@ -62,6 +62,7 @@ function NFTCard({ nft, mint }) {
       color={'whiteAlpha.800'}
       cursor="pointer"
       maxH="350px"
+      onClick={onOpen}
       sx={{
         background:
           'linear-gradient(0deg, #282c34 0%, rgba(17, 0, 32, 0.5) 100%)',
@@ -75,7 +76,7 @@ function NFTCard({ nft, mint }) {
         filter: 'brightness(1.3)',
       }}
     >
-      <VStack width={'100%'} onClick={onOpen}>
+      <VStack width={'100%'}>
         <Image h="200px" w="100%" src={metaData.image} />
       </VStack>
       {nft.employee !== '' && (

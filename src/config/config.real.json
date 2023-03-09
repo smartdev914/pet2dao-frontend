@@ -7,6 +7,10 @@
   "chainName": "Polygon Mainnet",
   "chainRpcUrl": "https://polygon-rpc.com/",
   "chainBlockExplorerUrls": ["https://polygonscan.com/"], 
-  "apiBaseURL": "https://app.gamium.world/api/v1/"
+  "apiBaseURL": "https://app.pet2dao:5000/",
+  "pinataApiKey": "38676d3157ef18f0d6cb",
+  "pinataSecretApiKey": "4ff088a6038b7b54ff9977a3e4565d0fff0128ae9b3fe403d065dcb8524f7703",
+  "apiEndpoint": "http://localhost:5000",
+  "baseUrl": "https://gateway.pinata.cloud/ipfs/"
 }
 

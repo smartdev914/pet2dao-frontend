@@ -19,7 +19,6 @@ const signIn = (account, navigate) => {
     await axios
       .request(options)
       .then(function (response) {
-        console.log(response)
         if (response.data.token) {
           const payload = jwtdecode(response.data.token)
           dispatch({
@@ -29,7 +28,6 @@ const signIn = (account, navigate) => {
           localStorage.setItem('token', JSON.stringify(response.data.token))
           navigate('/proposal/public')
         } else {
-          console.log(response)
           navigate('/signup')
         }
       })
