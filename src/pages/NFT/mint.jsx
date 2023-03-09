@@ -25,6 +25,15 @@ function MintNFT() {
   const navigate = useNavigate()
 
   const requestMint = async () => {
+    if (!mydata.file) {
+      toast({
+        title: `Please select image.`,
+        position: 'top-right',
+        isClosable: true,
+      })
+      return
+    }
+
     if (user.permission === 'admin') {
       toast({
         title: `You are administrator, you don't need to mint`,
@@ -64,7 +73,7 @@ function MintNFT() {
             position: 'top-right',
             isClosable: true,
           })
-          navigate('/nft/mynft')
+          navigate('/nft/viewnft')
         }
       })
       .catch(function (error) {
@@ -137,7 +146,7 @@ function MintNFT() {
                   className="drop-container"
                 >
                   {!mydata.imagePreview && (
-                    <span className="drop-title">Drop files here</span>
+                    <span className="drop-title">Select image</span>
                   )}
                   <input
                     id="images"
