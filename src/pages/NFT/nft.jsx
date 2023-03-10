@@ -42,7 +42,7 @@ function ViewNFT() {
   }
 
   const fetchNFTByID = async (ID) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       ;(async () => {
         try {
           const tokenURI = await roleNFTService.tokenURI(ID)
@@ -55,7 +55,7 @@ function ViewNFT() {
           }
           resolve(_nft)
         } catch (e) {
-          console.log(e)
+          reject()
         }
       })()
     })
@@ -68,8 +68,10 @@ function ViewNFT() {
     for (let i = 1; i <= count; i++) {
       promises.push(fetchNFTByID(i))
     }
-    const _approvedNFT = await Promise.all(promises)
-
+    const result = await Promise.allSettled(promises)
+    const _approvedNFT = result
+      .filter((item) => item.status === 'fulfilled')
+      .map((item) => item.value)
     setApprovedNFT(_approvedNFT)
     setIsLoading(false)
   }
@@ -146,6 +148,7 @@ function ViewNFT() {
                     columns={3}
                     spacing={10}
                     maxH="calc(100vh - 300px)"
+                    h="calc(100vh - 300px)"
                     p="10px"
                     overflowY={'scroll'}
                     sx={{

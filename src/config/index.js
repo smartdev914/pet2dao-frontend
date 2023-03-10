@@ -1,10 +1,8 @@
 import configDev from './config.dev.json'
-import configProd from './config.real.json'
+import configProd from './config.pro.json'
 
-const NODE_ENVS = {
-  DEV: 'development',
-  PROD: 'production',
-}
-const config = process.env.NODE_ENV === NODE_ENVS.DEV ? configDev : configProd
+const NODE_ENV = 'production'
+
+const config = NODE_ENV === 'development' ? configDev : configProd
 
 export default config

@@ -1,7 +1,7 @@
 {
   "mode": "DEVEOLOPMENT",
-  "roleNFT": "0x8463CFf7C253E61DAf13f5f33E167FAf5585768f",
-  "dao": "0x71C72249d4c631ccD7b6Cc93298Aa7F36Bc800a8",
+  "roleNFT": "0x5c54591EF1c526f72E7D7cD52ba2aCF7bedf688d",
+  "dao": "0x3e2b64f8406049627cD9cc0656bA4C184A3Cb0F5",
   "chainId": 80001,
   "network": 80001,
   "chainName": "Mumbai TestNet",
