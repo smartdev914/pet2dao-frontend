@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Flex,
   Text,
@@ -19,7 +19,7 @@ import { RoundButton } from 'components'
 import PropTypes from 'prop-types'
 import config from 'config'
 
-function NFTCard({ nft, mint }) {
+function NFTCard({ nft, mint, burn }) {
   const [metaData, setMetaData] = useState('')
   const { isOpen, onOpen, onClose } = useDisclosure()
 
@@ -50,6 +50,11 @@ function NFTCard({ nft, mint }) {
     )
   }
 
+  const handleBurn = async (event) => {
+    event.stopPropagation()
+    burn(nft.id)
+  }
+
   return (
     <VStack
       border={'1px'}
@@ -62,6 +67,7 @@ function NFTCard({ nft, mint }) {
       color={'whiteAlpha.800'}
       cursor="pointer"
       maxH="350px"
+      minH="350px"
       onClick={onOpen}
       sx={{
         background:
@@ -79,22 +85,29 @@ function NFTCard({ nft, mint }) {
       <VStack width={'100%'}>
         <Image h="200px" w="100%" src={metaData.image} />
       </VStack>
-      {nft.employee !== '' && (
-        <VStack width={'100%'}>
-          <Text fontFamily="Robot" color="white" fontSize="25px">
-            {nft.employee.name}
-          </Text>
-          <Flex justifyContent="space-evenly" w="100%">
-            <Text>{nft.employee.department.name}</Text>
-            <Text>{nft.employee.role.name}</Text>
-          </Flex>
-          {mint && (
-            <RoundButton theme="purple" w="100%" onClick={handleMint}>
-              Mint
-            </RoundButton>
-          )}
-        </VStack>
-      )}
+      <VStack width={'100%'}>
+        {nft.employee !== '' && (
+          <React.Fragment>
+            <Text fontFamily="Robot" color="white" fontSize="25px">
+              {nft.employee.name}
+            </Text>
+            <Flex justifyContent="space-evenly" w="100%">
+              <Text>{nft.employee.department.name}</Text>
+              <Text>{nft.employee.role.name}</Text>
+            </Flex>
+          </React.Fragment>
+        )}
+        {mint && (
+          <RoundButton theme="purple" w="100%" onClick={handleMint}>
+            Mint
+          </RoundButton>
+        )}
+        {burn && (
+          <RoundButton theme="purple" w="100%" onClick={handleBurn}>
+            Burn
+          </RoundButton>
+        )}
+      </VStack>
 
       <Modal isOpen={isOpen} size="3xl" onClose={onClose} variant="primary">
         <ModalOverlay />
@@ -166,6 +179,11 @@ function NFTCard({ nft, mint }) {
                 Mint
               </RoundButton>
             )}
+            {burn && (
+              <RoundButton theme="purple" w="100%" onClick={handleBurn}>
+                Burn
+              </RoundButton>
+            )}
           </ModalFooter>
         </ModalContent>
       </Modal>
@@ -176,6 +194,7 @@ function NFTCard({ nft, mint }) {
 NFTCard.propTypes = {
   nft: PropTypes.object.isRequired,
   mint: PropTypes.func,
+  burn: PropTypes.func,
 }
 
 export default NFTCard

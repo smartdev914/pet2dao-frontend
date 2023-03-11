@@ -72,7 +72,6 @@ function Employee() {
   const toast = useToast()
   const dispatch = useDispatch()
   const managerDisclosure = useDisclosure()
-  const cancelRef = useRef()
   const targetManagerId = useRef(0)
   const targetUserId = useRef(0)
   const currentSelectedColumn = useRef(null)
@@ -156,7 +155,7 @@ function Employee() {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <RoundButton ref={cancelRef} onClick={managerDisclosure.onClose}>
+              <RoundButton onClick={managerDisclosure.onClose}>
                 Cancel
               </RoundButton>
               <RoundButton onClick={handleManagerUpdate} ml={3}>

@@ -76,7 +76,7 @@ function NFT() {
   }
 
   const handleMint = async (to, _tokenURI, _department, _role, nftId) => {
-    console.log(account, to, _tokenURI, _department, _role)
+    setIsLoading(true)
     const hash = await roleNFTService.mintNFT(
       account,
       to,
@@ -95,6 +95,37 @@ function NFT() {
         isClosable: true,
       })
     }
+    setIsLoading(false)
+  }
+
+  const handleBurn = async (tokenId) => {
+    if (!tokenId || tokenId < 1) {
+      toast({
+        title: 'Invalid TokenId',
+        position: 'top-right',
+        isClosable: true,
+      })
+      return
+    }
+
+    setIsLoading(true)
+    const hash = await roleNFTService.burnNFT(account, tokenId)
+    if (hash) {
+      await fetchMintedNFT()
+      toast({
+        title: `NFT is burnt successfully`,
+        position: 'top-right',
+        isClosable: true,
+      })
+    } else {
+      console.log(hash)
+      toast({
+        title: `Error occurs in the BlockChain`,
+        position: 'top-right',
+        isClosable: true,
+      })
+    }
+    setIsLoading(false)
   }
 
   const fetchNFTByID = async (ID) => {
@@ -108,6 +139,7 @@ function NFT() {
           const _nft = {
             metaDataURI: hash,
             employee: employee,
+            id: ID,
           }
           resolve(_nft)
         } catch (e) {
@@ -220,36 +252,55 @@ function NFT() {
                     }}
                   >
                     {approvedNFT.map((nft) => (
-                      <NFTCard key={nft.metaDataURI} nft={nft} />
+                      <NFTCard
+                        key={nft.metaDataURI}
+                        nft={nft}
+                        burn={handleBurn}
+                      />
                     ))}
                   </SimpleGrid>
                 )}
               </TabPanel>
               <TabPanel>
-                <SimpleGrid
-                  columns={3}
-                  spacing={10}
-                  maxH="calc(100vh - 300px)"
-                  h="calc(100vh - 300px)"
-                  p="10px"
-                  overflowY={'scroll'}
-                  sx={{
-                    '&::-webkit-scrollbar': {
-                      width: '16px',
-                      borderRadius: '8px',
-                      backgroundColor: `rgba(40, 40, 40, 0.5)`,
-                    },
-                    '&::-webkit-scrollbar-thumb': {
-                      backgroundColor: `rgba(20, 20, 20, 0.8)`,
-                    },
-                  }}
-                >
-                  {pendingNFT
-                    .filter((nft) => !nft.isApproved)
-                    .map((nft) => (
-                      <NFTCard key={nft.id} nft={nft} mint={handleMint} />
-                    ))}
-                </SimpleGrid>
+                {isLoading ? (
+                  <Flex
+                    justifyContent="center"
+                    height="calc(100vh - 300px)"
+                    alignItems="center"
+                  >
+                    <Spinner
+                      thickness="4px"
+                      speed="0.65s"
+                      size="xl"
+                      color="primaryBlue"
+                    />
+                  </Flex>
+                ) : (
+                  <SimpleGrid
+                    columns={3}
+                    spacing={10}
+                    maxH="calc(100vh - 300px)"
+                    h="calc(100vh - 300px)"
+                    p="10px"
+                    overflowY={'scroll'}
+                    sx={{
+                      '&::-webkit-scrollbar': {
+                        width: '16px',
+                        borderRadius: '8px',
+                        backgroundColor: `rgba(40, 40, 40, 0.5)`,
+                      },
+                      '&::-webkit-scrollbar-thumb': {
+                        backgroundColor: `rgba(20, 20, 20, 0.8)`,
+                      },
+                    }}
+                  >
+                    {pendingNFT
+                      .filter((nft) => !nft.isApproved)
+                      .map((nft) => (
+                        <NFTCard key={nft.id} nft={nft} mint={handleMint} />
+                      ))}
+                  </SimpleGrid>
+                )}
               </TabPanel>
             </TabPanels>
           </Tabs>

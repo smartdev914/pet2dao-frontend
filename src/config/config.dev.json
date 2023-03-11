@@ -9,7 +9,6 @@
   "chainBlockExplorerUrls": [
     "https://rpc-mumbai.maticvigil.com/"
   ],
-  "apiBaseURL": "http://localhost:5000/api/",
   "pinataApiKey": "38676d3157ef18f0d6cb",
   "pinataSecretApiKey": "4ff088a6038b7b54ff9977a3e4565d0fff0128ae9b3fe403d065dcb8524f7703",
   "apiEndpoint": "http://localhost:5000",

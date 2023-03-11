@@ -40,6 +40,18 @@ class RoleNFTService extends BlockchainService {
     }
   }
 
+  burnNFT = async (from, tokenId) => {
+    try {
+      if (parseInt(tokenId) < 1) return null
+      const dataAbi = this.contract.methods.burnToken(tokenId).encodeABI()
+      const txHash = await this.signTransaction(from, dataAbi, 0)
+      return txHash
+    } catch (err) {
+      console.log(err)
+      return null
+    }
+  }
+
   updateIdentity = async (from, to, _department, _role) => {
     try {
       if (_department === '' || _role === '') {

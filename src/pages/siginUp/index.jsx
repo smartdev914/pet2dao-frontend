@@ -36,8 +36,11 @@ export default function Signup() {
 
   const formik = useFormik({
     initialValues: {
-      department: employeeReducer.department[0].id,
-      role: employeeReducer.role[0].id,
+      department:
+        employeeReducer.department.length > 0
+          ? employeeReducer.department[0].id
+          : '',
+      role: employeeReducer.role.length > 0 ? employeeReducer.role[0].id : '',
       name: '',
     },
     onSubmit: async (values) => {
