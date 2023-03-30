@@ -33,7 +33,7 @@ function PublicProposal() {
           paddingLeft="32px"
           pr="20px"
           pb="30px"
-          w="100%"
+          width={'78%'}
           maxH="calc(100vh - 150px)"
           overflowY="scroll"
           sx={{
