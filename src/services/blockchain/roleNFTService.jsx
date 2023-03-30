@@ -40,6 +40,17 @@ class RoleNFTService extends BlockchainService {
     }
   }
 
+  transferOwnership = async (from, to) => {
+    try {
+      const dataAbi = this.contract.methods.transferOwnership(to).encodeABI()
+      const txHash = await this.signTransaction(from, dataAbi, 0)
+      return txHash
+    } catch (err) {
+      console.log(err)
+      return null
+    }
+  }
+
   burnNFT = async (from, tokenId) => {
     try {
       if (parseInt(tokenId) < 1) return null
