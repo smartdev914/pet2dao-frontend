@@ -10,7 +10,10 @@ class DAOService extends BlockchainService {
     this.contract = new this.web3.eth.Contract(DAOAbi, DAOAddress)
   }
 
-  getAllProposal = async () => this.contract.methods.getAllProposal().call()
+  getAllProposal = async (start, end) =>
+    this.contract.methods.getAllProposal(start, end).call()
+
+  getProposalCount = async () => this.contract.methods.getProposalCount().call()
 
   getPermissionsOfLevel = async (level) =>
     this.contract.methods.getPermissionsOfLevel(level).call()
@@ -38,10 +41,10 @@ class DAOService extends BlockchainService {
     }
   }
 
-  createProposal = async (from, _contentURI) => {
+  createProposal = async (from, _contentURI, _isPublic) => {
     try {
       const dataAbi = this.contract.methods
-        .createProposal(_contentURI)
+        .createProposal(_contentURI, _isPublic)
         .encodeABI()
       const txHash = await this.signTransaction(from, dataAbi, 0)
       return txHash

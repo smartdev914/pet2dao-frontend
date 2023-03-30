@@ -1,6 +1,7 @@
 import PublicProposal from './proposal/public'
 import PrivateProposal from './proposal/private'
 import NewProposal from './proposal/new'
+import ProposalDetail from './proposal/proposalDetail'
 import ViewNFT from './NFT/nft'
 import MintNFT from './NFT/mint'
 import DepartmentRole from './admin/department_role'
@@ -14,6 +15,7 @@ export {
   PublicProposal,
   NewProposal,
   PrivateProposal,
+  ProposalDetail,
   ViewNFT,
   MintNFT,
   DepartmentRole,

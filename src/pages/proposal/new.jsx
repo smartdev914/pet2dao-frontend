@@ -1,9 +1,130 @@
+import { useState } from 'react'
 import { Layout, RoundButton } from 'components'
-import { Flex, Text, VStack, Input, Textarea, Box } from '@chakra-ui/react'
+import {
+  Flex,
+  Text,
+  Stack,
+  VStack,
+  Input,
+  Textarea,
+  Box,
+  useToast,
+  Spinner,
+  Radio,
+  RadioGroup,
+} from '@chakra-ui/react'
+import { useWeb3React } from '@web3-react/core'
 import { AttachmentIcon } from '@chakra-ui/icons'
+import { useDispatch, useSelector } from 'react-redux'
 import SideBar from './sidebar'
+import { uploadProposaltoIPFS } from 'services/api/uploader'
+import { daoService } from 'services/blockchain/DAOService'
+import { client } from 'services/api/useApi'
+import { createProposal } from 'store/actions/proposalAction'
+
+const visibleType = {
+  private: 'private',
+  public: 'public',
+}
 
 function NewProposal() {
+  const toast = useToast()
+  const [fileData, setData] = useState('')
+  const [title, setTitle] = useState('')
+  const [description, setDescription] = useState('')
+  const [visible, setVisible] = useState(visibleType.private)
+  const [isLoading, setIsLoading] = useState(false)
+
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.userReducer)
+  const { account } = useWeb3React()
+
+  const onTitleChange = (e) => {
+    setTitle(e.target.value)
+  }
+
+  const onDescriptionChange = (e) => {
+    setDescription(e.target.value)
+  }
+
+  const onImageChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      let reader = new FileReader()
+      let file = event.target.files[0]
+      console.log(file)
+      reader.onloadend = () => {
+        setData({
+          ...fileData,
+          imagePreview: reader.result,
+          file: file,
+        })
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const encrypt = async (text) => {
+    const token = JSON.parse(localStorage.getItem('token'))
+    const customOption = {
+      headers: {
+        Authorization: token,
+      },
+      data: {
+        text: text,
+      },
+    }
+    try {
+      const response = await client(
+        '/api/proposal/encrypt',
+        'POST',
+        customOption,
+      )
+      return response.data.text
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
+  const handleCreate = async () => {
+    if (title === '') {
+      toast({
+        title: `Title is required`,
+        position: 'top-right',
+        isClosable: true,
+      })
+      return
+    }
+    const isPublic = visible === visibleType.public
+    setIsLoading(true)
+    const response = await uploadProposaltoIPFS(
+      title,
+      description,
+      fileData.file,
+      isPublic,
+    )
+
+    let ipfsHash = response.data.IpfsHash
+    if (!isPublic) {
+      ipfsHash = await encrypt(response.data.IpfsHash)
+    }
+    const hash = await daoService.createProposal(account, ipfsHash, isPublic)
+
+    setIsLoading(false)
+
+    if (hash) {
+      dispatch(createProposal(user.id, ipfsHash, isPublic))
+      setData('')
+      setTitle('')
+      setDescription('')
+      setVisible(visibleType.private)
+      toast({
+        title: `New proposal created successfully`,
+        position: 'top-right',
+        isClosable: true,
+      })
+    }
+  }
+
   return (
     <Layout activeId="proposal">
       <Flex mt="24px">
@@ -14,79 +135,107 @@ function NewProposal() {
               New Proposal
             </Text>
           </Flex>
-          <Flex
-            width={'100%'}
-            border={'1px'}
-            borderColor="borderColor"
-            borderRadius="12px"
-            color={'whiteAlpha.800'}
-          >
-            <VStack mx="20px" w="75%" alignItems="flex-start" py={'20px'}>
-              <Text fontSize="20px" pl="30px">
-                Title
-              </Text>
-              <Input
-                borderColor="borderColor"
-                _focus={{
-                  borderColor: 'secondaryBorderColor',
-                }}
-                _focusVisible={{
-                  boxShadow: 'none',
-                }}
+          {isLoading ? (
+            <Flex
+              justifyContent="center"
+              height="calc(100vh - 300px)"
+              alignItems="center"
+            >
+              <Spinner
+                thickness="4px"
+                speed="0.65s"
+                size="xl"
+                color="primaryBlue"
               />
-              <Text fontSize="20px" pl="30px">
-                Description
-              </Text>
-              <Box w="100%">
-                <Textarea
+            </Flex>
+          ) : (
+            <Flex
+              width={'100%'}
+              border={'1px'}
+              borderColor="borderColor"
+              borderRadius="12px"
+              color={'whiteAlpha.800'}
+            >
+              <VStack mx="20px" w="75%" alignItems="flex-start" py={'20px'}>
+                <Text fontSize="20px" pl="30px">
+                  Title
+                </Text>
+                <Input
                   borderColor="borderColor"
-                  colo="textColor"
                   _focus={{
                     borderColor: 'secondaryBorderColor',
                   }}
                   _focusVisible={{
                     boxShadow: 'none',
                   }}
-                  rows="15"
-                  resize="none"
-                  borderRadius="10px 10px 0px 0px"
+                  value={title}
+                  onChange={onTitleChange}
                 />
-                <label
-                  htmlFor="images"
-                  style={{
-                    position: 'relative',
-                    display: 'flex',
-                    justifyContent: 'right',
-                    alignItems: 'center',
-                    borderColor: '#2d2d2d',
-                    borderWidth: '1px',
-                    width: '100%',
-                    height: '50px',
-                    padding: '20px',
-                    borderRadius: '0px 0px 10px 10px',
-                    color: '#8b949e',
-                    cursor: 'pointer',
-                    transition:
-                      'background .2s ease-in -out, border .2s ease-in-out',
-                  }}
-                  className="drop-container"
-                >
-                  <span className="drop-title">Attach file</span>
-                  <AttachmentIcon ml="10px" />
-                  <input
-                    id="images"
-                    type="file"
-                    style={{
-                      display: 'none',
+                <RadioGroup onChange={setVisible} value={visible}>
+                  <Stack direction="row" gap="20px">
+                    <Radio value={visibleType.private}>Private</Radio>
+                    <Radio value={visibleType.public}>Public</Radio>
+                  </Stack>
+                </RadioGroup>
+                <Text fontSize="20px" pl="30px">
+                  Description
+                </Text>
+                <Box w="100%">
+                  <Textarea
+                    borderColor="borderColor"
+                    colo="textColor"
+                    _focus={{
+                      borderColor: 'secondaryBorderColor',
                     }}
+                    _focusVisible={{
+                      boxShadow: 'none',
+                    }}
+                    rows="15"
+                    resize="none"
+                    borderRadius="10px 10px 0px 0px"
+                    value={description}
+                    onChange={onDescriptionChange}
                   />
-                </label>
-              </Box>
-            </VStack>
-            <Flex width={'25%'} mx="20px" py={'50px'} direction="column">
-              <RoundButton>Mint</RoundButton>
+                  <label
+                    htmlFor="images"
+                    style={{
+                      position: 'relative',
+                      display: 'flex',
+                      justifyContent: 'right',
+                      alignItems: 'center',
+                      borderColor: '#2d2d2d',
+                      borderWidth: '1px',
+                      width: '100%',
+                      height: '50px',
+                      padding: '20px',
+                      borderRadius: '0px 0px 10px 10px',
+                      color: '#8b949e',
+                      cursor: 'pointer',
+                      transition:
+                        'background .2s ease-in -out, border .2s ease-in-out',
+                    }}
+                    className="drop-container"
+                  >
+                    <span className="drop-title">
+                      {fileData.file ? fileData.file.name : 'Attach file'}
+                    </span>
+                    <AttachmentIcon ml="10px" />
+                    <input
+                      id="images"
+                      type="file"
+                      style={{
+                        display: 'none',
+                      }}
+                      onChange={onImageChange}
+                    />
+                  </label>
+                </Box>
+              </VStack>
+              <Flex width={'25%'} mx="20px" py={'50px'} direction="column">
+                <RoundButton onClick={handleCreate}>Create</RoundButton>
+              </Flex>
             </Flex>
-          </Flex>
+          )}
         </VStack>
       </Flex>
     </Layout>

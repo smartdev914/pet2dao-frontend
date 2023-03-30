@@ -13,6 +13,7 @@ import {
   PrivateProposal,
   NewProposal,
   ViewNFT,
+  ProposalDetail,
   MintNFT,
   DepartmentRole,
   Employee,
@@ -56,6 +57,10 @@ root.render(
               <Route path="/proposal/public" element={<PublicProposal />} />
               <Route path="/proposal/private" element={<PrivateProposal />} />
               <Route path="/proposal/new" element={<NewProposal />} />
+              <Route
+                path="/proposal/detail/:proposalId"
+                element={<ProposalDetail />}
+              />
             </Routes>
           </BrowserRouter>
         </Provider>

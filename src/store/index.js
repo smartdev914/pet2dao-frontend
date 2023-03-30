@@ -5,10 +5,12 @@ import thunk from 'redux-thunk'
 
 import { userReducer } from './reducers/userReducer'
 import { employeeReducer } from './reducers/employeeReducer'
+import { proposalReducer } from './reducers/proposalReducer'
 
 const rootReducer = combineReducers({
   userReducer,
   employeeReducer,
+  proposalReducer,
 })
 
 const store = createStore(
