@@ -22,7 +22,7 @@ import { findOneByAccountAddr } from 'store/actions/employeeAction'
 function NFT() {
   const [pendingNFT, setPendingNFT] = useState([])
   const [approvedNFT, setApprovedNFT] = useState([])
-  const [isLoading, setIsLoading] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
   const { account } = useWeb3React()
   const toast = useToast()
 

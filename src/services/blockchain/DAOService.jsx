@@ -31,6 +31,19 @@ class DAOService extends BlockchainService {
     }
   }
 
+  deletePermission = async (from, _level, _index) => {
+    try {
+      const dataAbi = this.contract.methods
+        .deletePermission(_level, _index)
+        .encodeABI()
+      const txHash = await this.signTransaction(from, dataAbi, 0)
+      return txHash
+    } catch (err) {
+      console.log(err)
+      return null
+    }
+  }
+
   approveProposal = async (from, index) => {
     try {
       const dataAbi = this.contract.methods.approveProposal(index).encodeABI()
