@@ -51,14 +51,11 @@ const fetchProposal = async (proposal) => {
 
 const getAllPublicProposal = () => {
   return async (dispatch) => {
-    const token = JSON.parse(localStorage.getItem('token'))
-
     const options = {
       method: 'GET',
       url: `${config.apiEndpoint}/api/proposal/getAllPublic`,
       headers: {
         'content-type': 'application/json',
-        Authorization: token,
       },
     }
     await axios
@@ -69,7 +66,6 @@ const getAllPublicProposal = () => {
           promises.push(fetchProposal(item))
         })
         const result = await Promise.all(promises)
-        console.log(result)
         dispatch({
           type: actionTypes.updateAllPublicProposal,
           data: result,
@@ -83,19 +79,27 @@ const getAllPublicProposal = () => {
 
 const getAllPrivateProposal = () => {
   return async (dispatch) => {
+    const token = JSON.parse(localStorage.getItem('token'))
+
     const options = {
       method: 'GET',
       url: `${config.apiEndpoint}/api/proposal/getAllPrivate`,
       headers: {
         'content-type': 'application/json',
+        Authorization: token,
       },
     }
     await axios
       .request(options)
-      .then(function (response) {
+      .then(async (response) => {
+        const promises = []
+        response.data.forEach((item) => {
+          promises.push(fetchProposal(item))
+        })
+        const result = await Promise.all(promises)
         dispatch({
-          type: actionTypes.updateAllPublicProposal,
-          data: response.data,
+          type: actionTypes.updateAllPrivateProposal,
+          data: result,
         })
       })
       .catch(function (error) {

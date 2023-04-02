@@ -54,6 +54,16 @@ class DAOService extends BlockchainService {
     }
   }
 
+  rejectProposal = async (from, index) => {
+    try {
+      const dataAbi = this.contract.methods.rejectProposal(index).encodeABI()
+      const txHash = await this.signTransaction(from, dataAbi, 0)
+      return txHash
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
   createProposal = async (from, _contentURI, _isPublic) => {
     try {
       const dataAbi = this.contract.methods

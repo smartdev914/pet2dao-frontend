@@ -7,6 +7,13 @@ import {
   IconButton,
   Stack,
   Text,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverArrow,
+  VStack,
 } from '@chakra-ui/react'
 import { ChevronDownIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router-dom'
@@ -85,20 +92,52 @@ const Header = ({ activeId }) => {
           <Box pl={6} py={4}>
             <Text fontSize="18px">{user.name}</Text>
           </Box>
-          <IconButton
-            // onClick={}
-            icon={<ChevronDownIcon w={10} h={10} />}
-            aria-label="Toggle Navigation"
-            mx="30px"
-            bg="transparent"
-            border="2px"
-            borderRadius="full"
-            borderColor="borderColor"
-            color="primaryBlue"
-            _hover={{
-              borderColor: 'primaryBlue',
-            }}
-          />
+          <Popover>
+            <PopoverTrigger>
+              <IconButton
+                // onClick={}
+                icon={<ChevronDownIcon w={10} h={10} />}
+                aria-label="Toggle Navigation"
+                mx="30px"
+                bg="transparent"
+                border="2px"
+                borderRadius="full"
+                borderColor="borderColor"
+                color="primaryBlue"
+                _hover={{
+                  borderColor: 'primaryBlue',
+                }}
+              />
+            </PopoverTrigger>
+            <PopoverContent
+              color="white"
+              bg="#1c1b20"
+              borderColor="borderColor"
+              p="10px"
+            >
+              <PopoverArrow background="primaryBlue" />
+              <PopoverHeader>
+                <Text fontSize="26px" fontWeight="500">
+                  Profile
+                </Text>
+              </PopoverHeader>
+              <PopoverBody>
+                <VStack alignItems="baseline">
+                  <Text fontSize="20px" fontWeight="500">
+                    {`Department: ${user.department}`}
+                  </Text>
+                  <Text fontSize="20px" fontWeight="500">
+                    {`Role: ${user.role}`}
+                  </Text>
+                  <Text fontSize="20px" fontWeight="500">
+                    {`Permission: ${user.approvePermission
+                      .map((item) => `LEVEL-${parseInt(item.level) + 1}`)
+                      .join(', ')}`}
+                  </Text>
+                </VStack>
+              </PopoverBody>
+            </PopoverContent>
+          </Popover>
         </Flex>
       </Container>
     </Flex>

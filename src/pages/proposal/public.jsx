@@ -4,11 +4,9 @@ import { Flex, Text, VStack } from '@chakra-ui/react'
 import { useDispatch, useSelector } from 'react-redux'
 import SideBar from './sidebar'
 import { useNavigate } from 'react-router'
-// import { daoService } from 'services/blockchain/DAOService'
 import { getAllPublicProposal } from 'store/actions/proposalAction'
 
 function PublicProposal() {
-  // const [proposal, setProposal] = useState([])
   const dispatch = useDispatch()
   const publicProposal = useSelector(
     (state) => state.proposalReducer,
@@ -18,7 +16,7 @@ function PublicProposal() {
 
   const handleClick = (index) => {
     console.log(publicProposal[index])
-    navigate(`/proposal/detail/${index}`, { viewType: 'public' })
+    navigate(`/proposal/detail/${index}`, { state: 'public' })
   }
 
   useEffect(() => {

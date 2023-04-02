@@ -59,18 +59,20 @@ const SideBar = ({ activeId }) => {
               Private Proposal
             </Box>
 
-            <Box
-              width="100%"
-              fontSize="18px"
-              px="24px"
-              py="8px"
-              borderLeft={activeId === 'new' ? '4px' : 'none'}
-              onClick={() => {
-                navigate('/proposal/new')
-              }}
-            >
-              New proposal
-            </Box>
+            {user.permission !== 'admin' && (
+              <Box
+                width="100%"
+                fontSize="18px"
+                px="24px"
+                py="8px"
+                borderLeft={activeId === 'new' ? '4px' : 'none'}
+                onClick={() => {
+                  navigate('/proposal/new')
+                }}
+              >
+                New proposal
+              </Box>
+            )}
           </React.Fragment>
         )}
       </VStack>
