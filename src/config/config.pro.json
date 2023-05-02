@@ -1,14 +1,14 @@
 {
   "mode": "PRODUCTION",
-  "roleNFT": "0x5AEA9E9cAAD80995b8675Da355EFCD5Fa8DbF3A6",
-  "dao": "0x0d30b978520E238271Ff9833C7fCC72d1f02DDb0",
-  "chainId": 137,
-  "network": 137,
-  "chainName": "Polygon Mainnet",
-  "chainRpcUrl": "https://polygon-rpc.com/",
-  "chainBlockExplorerUrls": ["https://polygonscan.com/"], 
-  "pinataApiKey": "38676d3157ef18f0d6cb",
-  "pinataSecretApiKey": "4ff088a6038b7b54ff9977a3e4565d0fff0128ae9b3fe403d065dcb8524f7703",
+  "roleNFT": "0x93E75b1F02faFFD19058EA9CE1527685dD2CE2f1",
+  "dao": "0xC71d97BC41d35596BDc3ac46a5Bc5aEa916c82c0",
+  "chainId": 42161,
+  "network": 42161,
+  "chainName": "Arbitrum One Mainnet",
+  "chainRpcUrl": "https://arb1.arbitrum.io/rpc",
+  "chainBlockExplorerUrls": ["https://arbiscan.io/"], 
+  "pinataApiKey": "b1e113c1fb3b69ab3f19",
+  "pinataSecretApiKey": "c0493a1d8b9a399f4cd12f709c63a4836c4973c23f0ef818a9a538473d86370f",
   "apiEndpoint": "http://ec2-3-16-203-188.us-east-2.compute.amazonaws.com",
   "baseUrl": "https://gateway.pinata.cloud/ipfs/"
 }
