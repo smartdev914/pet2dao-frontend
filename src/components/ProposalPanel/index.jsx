@@ -26,12 +26,13 @@ function ProposalPanel({ proposal, onClick, index }) {
         width={'100%'}
         justifyContent="space-between"
         alignItems="center"
-        fontSize="18px"
+        fontSize={{ base: '14px', md: '18px' }}
       >
         <Text>{`${employee.name} (${employee.department.name}  ${employee.role.name})`}</Text>
         <Badge
           color="white"
           padding="5px 10px"
+          fontSize={{ base: '8px', md: '12px' }}
           borderRadius="20px"
           bg={isRejected ? 'rgb(124 58 237)' : 'rgb(33 182 111)'}
         >
@@ -41,7 +42,7 @@ function ProposalPanel({ proposal, onClick, index }) {
       <Text
         color="white"
         fontWeight="bold"
-        fontSize="24px"
+        fontSize={{ base: '20px', md: '24px' }}
         overflow="hidden"
         sx={{
           display: '-webkit-box',
@@ -53,7 +54,7 @@ function ProposalPanel({ proposal, onClick, index }) {
       </Text>
       <Text
         color="textColor"
-        fontSize="20px"
+        fontSize={{ base: '16px', md: '20px' }}
         overflow="hidden"
         sx={{
           display: '-webkit-box',

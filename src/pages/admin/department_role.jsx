@@ -144,18 +144,28 @@ function DeparmentRole() {
 
   return (
     <Layout activeId="manager">
-      <Flex mt="24px">
+      <Flex mt={{ base: '10px', md: '24px' }}>
         <SideBar activeId="depart_role" />
-        <VStack paddingLeft="32px" width={'78%'}>
+        <VStack
+          px={{ base: '10px', md: '32px' }}
+          width={{ base: '100%', lg: '78%' }}
+        >
           <Flex pb={'20px'}>
-            <Text fontSize="28px" color="whiteAlpha.900">
+            <Text
+              fontSize={{ base: '24px', md: '28px' }}
+              color="whiteAlpha.900"
+            >
               Department & Role
             </Text>
           </Flex>
-          <Flex width={'100%'} color={'whiteAlpha.800'}>
+          <Flex
+            direction={{ base: 'column', md: 'row' }}
+            width={'100%'}
+            gap="20px"
+            color={'whiteAlpha.800'}
+          >
             <VStack
-              width={'50%'}
-              mx="20px"
+              width={{ base: '100%', md: '50%' }}
               border={'1px'}
               borderColor="secondaryBorderColor"
               borderRadius="12px"
@@ -231,8 +241,7 @@ function DeparmentRole() {
               </VStack>
             </VStack>
             <VStack
-              width={'50%'}
-              mx="20px"
+              width={{ base: '100%', md: '50%' }}
               border={'1px'}
               borderColor="secondaryBorderColor"
               borderRadius="12px"

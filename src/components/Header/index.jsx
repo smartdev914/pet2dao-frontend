@@ -14,8 +14,20 @@ import {
   PopoverBody,
   PopoverArrow,
   VStack,
+  useDisclosure,
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from '@chakra-ui/react'
-import { ChevronDownIcon } from '@chakra-ui/icons'
+import { ChevronDownIcon, HamburgerIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
@@ -25,6 +37,7 @@ import Logo from 'assets/LOGO.png'
 const Header = ({ activeId }) => {
   const navigate = useNavigate()
   const user = useSelector((state) => state.userReducer)
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   return (
     <Flex
@@ -42,8 +55,20 @@ const Header = ({ activeId }) => {
           ml={{ base: -2 }}
           alignItems="center"
           justify="space-between"
-          direction={{ sm: 'row', base: 'column' }}
         >
+          <IconButton
+            aria-label="Open Menu"
+            size="lg"
+            bg="transparent"
+            borderRadius="full"
+            color="primaryBlue"
+            icon={<HamburgerIcon w={6} h={6} />}
+            _hover={{
+              bg: 'primaryBackground',
+            }}
+            display={{ base: 'block', lg: 'none' }}
+            onClick={onOpen}
+          />
           <Box flex={1}>
             <Image src={Logo} height={14} alt="Logo" />
           </Box>
@@ -53,6 +78,10 @@ const Header = ({ activeId }) => {
             fontFamily="Helvetica"
             color="primaryBlue"
             cursor="pointer"
+            display={{
+              base: 'none',
+              lg: 'flex',
+            }}
           >
             <Box
               px={6}
@@ -89,7 +118,7 @@ const Header = ({ activeId }) => {
               </Box>
             )}
           </Stack>
-          <Box pl={6} py={4}>
+          <Box pl={6} py={4} display={{ base: 'none', md: 'block' }}>
             <Text fontSize="18px">{user.name}</Text>
           </Box>
           <Popover>
@@ -98,7 +127,7 @@ const Header = ({ activeId }) => {
                 // onClick={}
                 icon={<ChevronDownIcon w={10} h={10} />}
                 aria-label="Toggle Navigation"
-                mx="30px"
+                mx={{ base: '0px', md: '30px' }}
                 bg="transparent"
                 border="2px"
                 borderRadius="full"
@@ -123,6 +152,13 @@ const Header = ({ activeId }) => {
               </PopoverHeader>
               <PopoverBody>
                 <VStack alignItems="baseline">
+                  <Text
+                    fontSize="20px"
+                    fontWeight="500"
+                    display={{ base: 'block', md: 'none' }}
+                  >
+                    {`Name: ${user.name}`}
+                  </Text>
                   <Text fontSize="20px" fontWeight="500">
                     {`Department: ${user.department}`}
                   </Text>
@@ -139,6 +175,143 @@ const Header = ({ activeId }) => {
             </PopoverContent>
           </Popover>
         </Flex>
+        <Drawer
+          onClose={onClose}
+          placement="left"
+          isOpen={isOpen}
+          size={{ base: 'full', md: 'md' }}
+        >
+          <DrawerOverlay />
+          <DrawerContent bg="primaryBlack">
+            <DrawerCloseButton color="primaryBlue" />
+            <DrawerHeader>
+              <Image src={Logo} height={14} alt="Logo" />
+            </DrawerHeader>
+            <DrawerBody color="primaryBlue">
+              <Accordion defaultIndex={[0]} allowToggle allowMultiple>
+                <AccordionItem borderColor="primaryBlue">
+                  <AccordionButton>
+                    <Box as="span" flex="1" textAlign="left">
+                      <Text fontSize="20px" fontWeight="500">
+                        Proposal
+                      </Text>
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel pb={4} textAlign="center">
+                    <Text
+                      fontSize="16px"
+                      py="10px"
+                      onClick={() => {
+                        navigate('/proposal/public')
+                      }}
+                    >
+                      Public Proposal
+                    </Text>
+                    <Text
+                      fontSize="16px"
+                      py="10px"
+                      onClick={() => {
+                        navigate('/proposal/private')
+                      }}
+                    >
+                      Private Proposal
+                    </Text>
+                    <Text
+                      fontSize="16px"
+                      py="10px"
+                      onClick={() => {
+                        navigate('/proposal/new')
+                      }}
+                    >
+                      New Proposal
+                    </Text>
+                  </AccordionPanel>
+                </AccordionItem>
+
+                <AccordionItem border="none">
+                  <AccordionButton>
+                    <Box as="span" flex="1" textAlign="left">
+                      <Text fontSize="20px" fontWeight="500">
+                        NFT
+                      </Text>
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel pb={4} textAlign="center">
+                    <Text
+                      fontSize="16px"
+                      py="10px"
+                      onClick={() => {
+                        navigate('/nft/viewnft')
+                      }}
+                    >
+                      NFTs
+                    </Text>
+                    <Text
+                      fontSize="16px"
+                      py="10px"
+                      onClick={() => {
+                        navigate('/nft/mint')
+                      }}
+                    >
+                      Mint NFT
+                    </Text>
+                  </AccordionPanel>
+                </AccordionItem>
+
+                <AccordionItem border="none">
+                  <AccordionButton>
+                    <Box as="span" flex="1" textAlign="left">
+                      <Text fontSize="20px" fontWeight="500">
+                        Manager
+                      </Text>
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                  <AccordionPanel pb={4} textAlign="center">
+                    <Text
+                      fontSize="16px"
+                      py="10px"
+                      onClick={() => {
+                        navigate('/admin/employee')
+                      }}
+                    >
+                      Employee
+                    </Text>
+                    <Text
+                      fontSize="16px"
+                      py="10px"
+                      onClick={() => {
+                        navigate('/admin/nft')
+                      }}
+                    >
+                      NFT
+                    </Text>
+                    <Text
+                      fontSize="16px"
+                      py="10px"
+                      onClick={() => {
+                        navigate('/admin/permission')
+                      }}
+                    >
+                      Permission
+                    </Text>
+                    <Text
+                      fontSize="16px"
+                      py="10px"
+                      onClick={() => {
+                        navigate('/admin/depart_role')
+                      }}
+                    >
+                      Department & Role
+                    </Text>
+                  </AccordionPanel>
+                </AccordionItem>
+              </Accordion>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
       </Container>
     </Flex>
   )

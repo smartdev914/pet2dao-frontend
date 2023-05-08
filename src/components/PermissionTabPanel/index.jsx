@@ -43,8 +43,17 @@ const PermissionTabPanel = ({
           />
         </Flex>
       ) : (
-        <VStack paddingX="20px" paddingY="20px" w="600px">
-          <Flex w="100%" gap="20px" marginBottom="4">
+        <VStack
+          paddingX={{ base: '5px', md: '20px' }}
+          paddingY="20px"
+          w="600px"
+        >
+          <Flex
+            w="100%"
+            gap={{ base: '10px', md: '20px' }}
+            marginBottom="4"
+            direction={{ base: 'column', md: 'row' }}
+          >
             <Select
               id="department"
               type="text"
@@ -105,7 +114,7 @@ const PermissionTabPanel = ({
                 alignItems="center"
                 justifyContent="space-evenly"
                 key={item.id}
-                px="40px"
+                px={{ base: '10px', md: '40px' }}
                 py="5px"
                 cursor="pointer"
                 mt={'0px'}

@@ -16,6 +16,7 @@ const SideBar = ({ activeId }) => {
       borderRadius="12px"
       borderColor="borderColor"
       color="white"
+      display={{ base: 'none', lg: 'flex' }}
     >
       <VStack w="100%">
         <Image name="logo" src={Logo} height="70px" my="20px" />

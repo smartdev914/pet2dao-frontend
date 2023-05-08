@@ -127,11 +127,17 @@ function NewProposal() {
 
   return (
     <Layout activeId="proposal">
-      <Flex mt="24px">
+      <Flex mt={{ base: '10px', md: '24px' }}>
         <SideBar activeId="new" />
-        <VStack paddingLeft="32px" width={'78%'}>
+        <VStack
+          px={{ base: '10px', lg: '32px' }}
+          width={{ base: '100%', lg: '78%' }}
+        >
           <Flex>
-            <Text fontSize="28px" color="whiteAlpha.900">
+            <Text
+              fontSize={{ base: '24px', md: '28px' }}
+              color="whiteAlpha.900"
+            >
               New Proposal
             </Text>
           </Flex>
@@ -155,9 +161,15 @@ function NewProposal() {
               borderColor="borderColor"
               borderRadius="12px"
               color={'whiteAlpha.800'}
+              direction={{ base: 'column', md: 'row' }}
             >
-              <VStack mx="20px" w="75%" alignItems="flex-start" py={'20px'}>
-                <Text fontSize="20px" pl="30px">
+              <VStack
+                px={{ base: '10px', lg: '20px' }}
+                w={{ base: '100%', lg: '75%' }}
+                alignItems="flex-start"
+                py={{ base: '10px', md: '20px' }}
+              >
+                <Text fontSize={{ base: '16px', md: '20px' }} pl="30px">
                   Title
                 </Text>
                 <Input
@@ -177,7 +189,7 @@ function NewProposal() {
                     <Radio value={visibleType.public}>Public</Radio>
                   </Stack>
                 </RadioGroup>
-                <Text fontSize="20px" pl="30px">
+                <Text fontSize={{ base: '16px', md: '20px' }} pl="30px">
                   Description
                 </Text>
                 <Box w="100%">
@@ -231,7 +243,12 @@ function NewProposal() {
                   </label>
                 </Box>
               </VStack>
-              <Flex width={'25%'} mx="20px" py={'50px'} direction="column">
+              <Flex
+                width={{ base: '100%', md: '25%' }}
+                px="20px"
+                py={{ base: '20px', md: '50px' }}
+                direction="column"
+              >
                 <RoundButton onClick={handleCreate}>Create</RoundButton>
               </Flex>
             </Flex>

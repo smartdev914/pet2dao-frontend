@@ -44,11 +44,11 @@ export const theme = extendTheme({
     black: 900,
   },
   breakpoints: {
-    xs: '320px',
-    sm: '30em',
-    md: '48em',
-    lg: '62em',
-    xl: '80em',
+    xs: '319px',
+    sm: '419px',
+    md: '759px',
+    lg: '1019px',
+    xl: '1439px',
     '2xl': '96em',
   },
   lineHeights: {

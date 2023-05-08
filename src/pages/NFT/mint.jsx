@@ -99,11 +99,17 @@ function MintNFT() {
 
   return (
     <Layout activeId="nft">
-      <Flex mt="24px">
+      <Flex mt={{ base: '10px', md: '24px' }}>
         <SideBar activeId="mint" />
-        <VStack paddingLeft="32px" width={'78%'}>
+        <VStack
+          px={{ base: '10px', lg: '32px' }}
+          width={{ base: '100%', lg: '78%' }}
+        >
           <Flex pb={'20px'}>
-            <Text fontSize="28px" color="whiteAlpha.900">
+            <Text
+              fontSize={{ base: '24px', md: '28px' }}
+              color="whiteAlpha.900"
+            >
               Mint NFT
             </Text>
           </Flex>
@@ -123,8 +129,9 @@ function MintNFT() {
               borderColor="secondaryBorderColor"
               borderRadius="12px"
               color={'whiteAlpha.800'}
+              direction={{ base: 'column', md: 'row' }}
             >
-              <VStack width={'50%'} mx="20px" py={'20px'}>
+              <VStack width={{ base: '100%', md: '50%' }} px="20px" py={'20px'}>
                 <label
                   htmlFor="images"
                   style={{
@@ -166,26 +173,36 @@ function MintNFT() {
                 </label>
               </VStack>
               <Flex
-                width={'50%'}
-                mx="20px"
+                width={{ base: '100%', md: '50%' }}
+                px="20px"
                 py={'20px'}
                 direction="column"
                 justifyContent={'space-evenly'}
+                gap="20px"
               >
                 <FormControl id="account">
-                  <FormLabel fontSize="20px" color="white">
+                  <FormLabel
+                    fontSize={{ base: '16px', md: '20px' }}
+                    color="white"
+                  >
                     Department
                   </FormLabel>
                   <Text type="text">{user.department}</Text>
                 </FormControl>
                 <FormControl id="account">
-                  <FormLabel fontSize="20px" color="white">
+                  <FormLabel
+                    fontSize={{ base: '16px', md: '20px' }}
+                    color="white"
+                  >
                     Role
                   </FormLabel>
                   <Text type="text">{user.role}</Text>
                 </FormControl>
                 <FormControl id="account">
-                  <FormLabel fontSize="20px" color="white">
+                  <FormLabel
+                    fontSize={{ base: '16px', md: '20px' }}
+                    color="white"
+                  >
                     Account
                   </FormLabel>
                   <Text type="text">{account}</Text>

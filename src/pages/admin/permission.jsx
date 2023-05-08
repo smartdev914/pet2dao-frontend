@@ -196,11 +196,18 @@ function Permission() {
 
   return (
     <Layout activeId="manager">
-      <Flex mt="24px">
+      <Flex mt={{ base: '10px', md: '24px' }}>
         <SideBar activeId="permission" />
-        <VStack paddingLeft="32px" width={'78%'}>
-          <Flex pb={'20px'} direction="column">
-            <Text fontSize="28px" textAlign={'center'} color="whiteAlpha.900">
+        <VStack
+          px={{ base: '10px', md: '32px' }}
+          width={{ base: '100%', lg: '78%' }}
+        >
+          <Flex pb={{ base: '10px', md: '20px' }} direction="column">
+            <Text
+              fontSize={{ base: '24px', md: '28px' }}
+              textAlign={'center'}
+              color="whiteAlpha.900"
+            >
               Permission
             </Text>
           </Flex>
@@ -216,7 +223,7 @@ function Permission() {
                 borderBottom="1px"
                 borderColor="secondaryBorderColor"
                 fontFamily="Robot"
-                fontSize="20px"
+                fontSize={{ base: '16px', md: '20px' }}
                 _selected={{
                   border: '1px',
                   borderColor: 'secondaryBorderColor',
@@ -231,7 +238,7 @@ function Permission() {
                 borderBottom="1px"
                 borderColor="secondaryBorderColor"
                 fontFamily="Robot"
-                fontSize="20px"
+                fontSize={{ base: '16px', md: '20px' }}
                 _selected={{
                   border: '1px',
                   borderColor: 'secondaryBorderColor',
@@ -246,7 +253,7 @@ function Permission() {
                 borderBottom="1px"
                 borderColor="secondaryBorderColor"
                 fontFamily="Robot"
-                fontSize="20px"
+                fontSize={{ base: '16px', md: '20px' }}
                 _selected={{
                   border: '1px',
                   borderColor: 'secondaryBorderColor',
@@ -261,7 +268,7 @@ function Permission() {
                 borderBottom="1px"
                 borderColor="secondaryBorderColor"
                 fontFamily="Robot"
-                fontSize="20px"
+                fontSize={{ base: '16px', md: '20px' }}
                 _selected={{
                   border: '1px',
                   borderColor: 'secondaryBorderColor',
