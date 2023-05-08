@@ -51,7 +51,7 @@ function NFTCard({ nft, mint, burn }) {
     <VStack
       border={'1px'}
       bg="#282c34"
-      w="250px"
+      w={{ base: '240px', sm: '250px' }}
       maxW="250px"
       borderColor="secondaryBorderColor"
       borderRadius="12px"
@@ -101,7 +101,12 @@ function NFTCard({ nft, mint, burn }) {
         )}
       </VStack>
 
-      <Modal isOpen={isOpen} size="3xl" onClose={onClose} variant="primary">
+      <Modal
+        isOpen={isOpen}
+        size={{ base: 'sm', md: '3xl' }}
+        onClose={onClose}
+        variant="primary"
+      >
         <ModalOverlay />
         <ModalContent bg="primaryBackground" overflow="hidden">
           <ModalHeader
@@ -118,44 +123,73 @@ function NFTCard({ nft, mint, burn }) {
               borderBottom={'1px'}
               borderColor="secondaryBorderColor"
               color={'whiteAlpha.800'}
+              direction={{ base: 'column', md: 'row' }}
             >
-              <VStack width={'40%'} mx="20px" py={'20px'}>
+              <VStack
+                width={{ base: '100%', md: '40%' }}
+                px={{ base: '10px', md: '20px' }}
+                py={'20px'}
+              >
                 <Image h="250px" objectFit="cover" src={metaData.image} />
               </VStack>
               {nft.employee !== '' && (
                 <Flex
-                  width={'60%'}
-                  mx="10px"
+                  width={{ base: '100%', md: '60%' }}
+                  px="10px"
                   py={'20px'}
                   direction="column"
                   justifyContent={'space-evenly'}
                 >
                   <FormControl id="account">
-                    <FormLabel fontSize="20px" mb="0px" color="white">
+                    <FormLabel
+                      fontSize={{ base: '16px', md: '20px' }}
+                      mb="0px"
+                      color="white"
+                    >
                       Department
                     </FormLabel>
                     <Text type="text">{nft.employee.department.name}</Text>
                   </FormControl>
                   <FormControl id="account">
-                    <FormLabel fontSize="20px" mt="10px" mb="0px" color="white">
+                    <FormLabel
+                      fontSize={{ base: '16px', md: '20px' }}
+                      mt="10px"
+                      mb="0px"
+                      color="white"
+                    >
                       Role
                     </FormLabel>
                     <Text type="text">{nft.employee.role.name}</Text>
                   </FormControl>
                   <FormControl id="account">
-                    <FormLabel fontSize="20px" mt="10px" mb="0px" color="white">
+                    <FormLabel
+                      fontSize={{ base: '16px', md: '20px' }}
+                      mt="10px"
+                      mb="0px"
+                      color="white"
+                    >
                       Owner
                     </FormLabel>
                     <Text type="text">{nft.employee.name}</Text>
                   </FormControl>
                   <FormControl id="account">
-                    <FormLabel fontSize="20px" mt="10px" mb="0px" color="white">
+                    <FormLabel
+                      fontSize={{ base: '16px', md: '20px' }}
+                      mt="10px"
+                      mb="0px"
+                      color="white"
+                    >
                       Account Address
                     </FormLabel>
                     <Text type="text">{nft.employee.accountAddr}</Text>
                   </FormControl>
                   <FormControl id="account">
-                    <FormLabel fontSize="20px" mt="10px" mb="0px" color="white">
+                    <FormLabel
+                      fontSize={{ base: '16px', md: '20px' }}
+                      mt="10px"
+                      mb="0px"
+                      color="white"
+                    >
                       Description
                     </FormLabel>
                     <Text type="text">{metaData.description}</Text>

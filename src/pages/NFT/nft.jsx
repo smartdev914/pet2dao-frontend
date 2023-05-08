@@ -83,11 +83,18 @@ function ViewNFT() {
 
   return (
     <Layout activeId="viewnft">
-      <Flex mt="24px">
+      <Flex mt={{ base: '10px', md: '24px' }}>
         <SideBar activeId="viewnft" />
-        <VStack paddingLeft="32px" width={'78%'}>
+        <VStack
+          px={{ base: '10px', md: '32px' }}
+          width={{ base: '100%', lg: '78%' }}
+        >
           <Flex pb={'20px'} direction="column">
-            <Text fontSize="28px" textAlign={'center'} color="whiteAlpha.900">
+            <Text
+              fontSize={{ base: '24px', md: '28px' }}
+              textAlign={'center'}
+              color="whiteAlpha.900"
+            >
               NFT
             </Text>
           </Flex>

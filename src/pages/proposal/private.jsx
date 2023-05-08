@@ -24,13 +24,13 @@ function PrivateProposal() {
 
   return (
     <Layout activeId="proposal">
-      <Flex mt="24px">
+      <Flex mt={{ base: '10px', md: '24px' }}>
         <SideBar activeId="private" />
         <VStack
-          paddingLeft="32px"
-          pr="20px"
+          paddingLeft={{ base: '5px', md: '32px' }}
+          pr={{ base: '5px', md: '20px' }}
           pb="30px"
-          width={'78%'}
+          width={{ base: '100%', lg: '78%' }}
           maxH="calc(100vh - 150px)"
           overflowY="scroll"
           sx={{
@@ -45,7 +45,10 @@ function PrivateProposal() {
           }}
         >
           <Flex>
-            <Text fontSize="28px" color="whiteAlpha.900">
+            <Text
+              fontSize={{ base: '24px', md: '28px' }}
+              color="whiteAlpha.900"
+            >
               Private Proposal
             </Text>
           </Flex>
