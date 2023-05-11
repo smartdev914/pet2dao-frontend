@@ -3,7 +3,7 @@ import { actionTypes } from '../actions/types'
 const initialState = {
   id: 0,
   name: '',
-  permission: '',
+  isAdmin: false,
   approvePermission: [],
   isManager: false,
   isApproved: false,
@@ -18,7 +18,7 @@ const userReducer = (state = initialState, action) => {
         ...state,
         id: action.payload.id,
         name: action.payload.name,
-        permission: action.payload.permission,
+        isAdmin: action.payload.isAdmin,
         approvePermission: action.payload.approvePermission,
         isManager: action.payload.isManager,
         isApproved: action.payload.isApproved,

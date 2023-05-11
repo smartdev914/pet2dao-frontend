@@ -1,7 +1,7 @@
 {
   "mode": "PRODUCTION",
-  "roleNFT": "0x93E75b1F02faFFD19058EA9CE1527685dD2CE2f1",
-  "dao": "0xC71d97BC41d35596BDc3ac46a5Bc5aEa916c82c0",
+  "roleNFT": "0x277830bA46c4b278ABd30083Bae78CD15d39F403",
+  "dao": "0xC0b8e36Dd4f271BF4c2775ad5154BAAbF73399C2",
   "chainId": 42161,
   "network": 42161,
   "chainName": "Arbitrum One Mainnet",

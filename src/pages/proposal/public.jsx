@@ -15,7 +15,7 @@ function PublicProposal() {
   const navigate = useNavigate()
 
   const handleClick = (index) => {
-    console.log(publicProposal[index])
+    // console.log(publicProposal[index])
     navigate(`/proposal/detail/${index}`, { state: 'public' })
   }
 

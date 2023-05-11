@@ -1,13 +1,13 @@
 {
   "mode": "DEVEOLOPMENT",
-  "roleNFT": "0x93E75b1F02faFFD19058EA9CE1527685dD2CE2f1",
-  "dao": "0xC71d97BC41d35596BDc3ac46a5Bc5aEa916c82c0",
-  "chainId": 421613,
-  "network": 421613,
-  "chainName": "Arbitrum Goerli Testnet",
-  "chainRpcUrl": "https://goerli-rollup.arbitrum.io/rpc",
+  "roleNFT": "0x5E65F60E40A52e1f7F1184d1E2EBC5f2A69ceb01",
+  "dao": "0x81fBa34D43e7590De7C3a2b56c277f87950a646F",
+  "chainId": 80001,
+  "network": 80001,
+  "chainName": "Mumbai TestNet",
+  "chainRpcUrl": "https://rpc-mumbai.maticvigil.com/",
   "chainBlockExplorerUrls": [
-    "https://goerli.arbiscan.io/"
+    "https://rpc-mumbai.maticvigil.com/"
   ],
   "pinataApiKey": "b1e113c1fb3b69ab3f19",
   "pinataSecretApiKey": "c0493a1d8b9a399f4cd12f709c63a4836c4973c23f0ef818a9a538473d86370f",

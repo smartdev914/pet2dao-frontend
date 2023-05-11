@@ -51,7 +51,6 @@ function NewProposal() {
     if (event.target.files && event.target.files[0]) {
       let reader = new FileReader()
       let file = event.target.files[0]
-      console.log(file)
       reader.onloadend = () => {
         setData({
           ...fileData,

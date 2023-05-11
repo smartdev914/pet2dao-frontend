@@ -79,6 +79,18 @@ const SideBar = ({ activeId }) => {
         >
           Department & Role
         </Box>
+        <Box
+          width="100%"
+          fontSize="18px"
+          px="24px"
+          py="8px"
+          borderLeft={activeId === 'admin' ? '4px' : 'none'}
+          onClick={() => {
+            navigate('/admin/admin')
+          }}
+        >
+          Administrator
+        </Box>
       </VStack>
     </VStack>
   )

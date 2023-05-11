@@ -24,7 +24,14 @@ class RoleNFTService extends BlockchainService {
   ownerOf = async (tokenId) => this.contract.methods.ownerOf(tokenId).call()
 
   tokenIdOf = async (address) => this.contract.methods.tokenIdOf(address).call()
+
   tokenURI = async (tokenId) => this.contract.methods.tokenURI(tokenId).call()
+
+  getRoleMemberCount = async (role) =>
+    this.contract.methods.getRoleMemberCount(role).call()
+
+  getRoleMember = async (role, index) =>
+    this.contract.methods.getRoleMember(role, index).call()
 
   mintNFT = async (from, to, _tokenURI, _department, _role) => {
     try {
@@ -77,6 +84,32 @@ class RoleNFTService extends BlockchainService {
       return txHash
     } catch (err) {
       console.log(err)
+    }
+  }
+
+  addAdmin = async (from, _address) => {
+    try {
+      if (_address === '') return null
+      const dataAbi = this.contract.methods.addAdmin(_address).encodeABI()
+      const txHash = await this.signTransaction(from, dataAbi, 0)
+      return txHash
+    } catch (err) {
+      console.log(err)
+      return null
+    }
+  }
+
+  revokeRole = async (from, _role, _address) => {
+    try {
+      if (_address === '') return null
+      const dataAbi = this.contract.methods
+        .revokeRole(_role, _address)
+        .encodeABI()
+      const txHash = await this.signTransaction(from, dataAbi, 0)
+      return txHash
+    } catch (err) {
+      console.log(err)
+      return null
     }
   }
 }
