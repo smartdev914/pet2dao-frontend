@@ -105,7 +105,7 @@ const Header = ({ activeId }) => {
                 <Text fontSize="18px">NFT</Text>
               </Box>
             )}
-            {user.permission === 'admin' && (
+            {user.isAdmin && (
               <Box
                 px={6}
                 py={4}

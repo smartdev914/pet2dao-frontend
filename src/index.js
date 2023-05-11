@@ -21,6 +21,7 @@ import {
   Permission,
   DashBoard,
   Signup,
+  Admin,
 } from 'pages'
 import { theme } from 'theme'
 import { store } from 'store'
@@ -52,6 +53,7 @@ root.render(
               <Route path="/admin/nft" element={<NFT />} />
               <Route path="/admin/permission" element={<Permission />} />
               <Route path="/admin/depart_role" element={<DepartmentRole />} />
+              <Route path="/admin/admin" element={<Admin />} />
               <Route path="/nft/viewnft" element={<ViewNFT />} />
               <Route path="/nft/mint" element={<MintNFT />} />
               <Route path="/proposal/public" element={<PublicProposal />} />

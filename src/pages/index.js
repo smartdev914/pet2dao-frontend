@@ -8,6 +8,7 @@ import DepartmentRole from './admin/department_role'
 import Employee from './admin/employee'
 import NFT from './admin/nft'
 import Permission from './admin/permission'
+import Admin from './admin/admin'
 import DashBoard from './Dashboard'
 import Signup from './siginUp'
 
@@ -22,6 +23,7 @@ export {
   Employee,
   NFT,
   Permission,
+  Admin,
   DashBoard,
   Signup,
 }

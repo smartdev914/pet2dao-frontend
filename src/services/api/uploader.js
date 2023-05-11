@@ -160,7 +160,7 @@ export const uploadProposaltoIPFS = async (
     fileHash,
   )
 
-  console.log(metaDataHash, isPublic)
+  console.log(isPublic)
   return metaDataHash
 }
 

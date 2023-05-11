@@ -128,7 +128,7 @@ function Employee() {
           <VStack
             px={{ base: '10px', md: '32px' }}
             width={{ base: '100%', lg: '78%' }}
-            overflowX="scroll"
+            overflowX={{ base: 'scroll', md: 'auto' }}
             alignItems="baseline"
           >
             <Flex w="100%" pb={'20px'} direction="column">
