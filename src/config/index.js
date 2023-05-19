@@ -1,8 +1,7 @@
 import configDev from './config.dev.json'
 import configProd from './config.pro.json'
 
-const NODE_ENV = 'production'
-
-const config = NODE_ENV === 'development' ? configDev : configProd
+// eslint-disable-next-line no-undef
+const config = process.env.NODE_ENV === 'DEVELOPMENT' ? configDev : configProd
 
 export default config

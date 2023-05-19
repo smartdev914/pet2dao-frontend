@@ -31,8 +31,61 @@ import { ChevronDownIcon, HamburgerIcon } from '@chakra-ui/icons'
 import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useSelector } from 'react-redux'
-
 import Logo from 'assets/LOGO.png'
+
+import { HeaderItems } from 'constants'
+
+const CustomAccordionItem = ({ title, subtitles }) => {
+  const navigate = useNavigate()
+  return (
+    <AccordionItem borderColor="primaryBlue">
+      <AccordionButton>
+        <Box as="span" flex="1" textAlign="left">
+          <Text
+            fontSize="20px"
+            fontWeight="500"
+            _hover={{
+              fontWeight: 'bold',
+            }}
+          >
+            {title}
+          </Text>
+        </Box>
+        <AccordionIcon />
+      </AccordionButton>
+      <AccordionPanel pb={4} textAlign="center">
+        {subtitles.map(({ text, path }) => (
+          <Text
+            key={path}
+            fontSize="16px"
+            py="10px"
+            cursor="pointer"
+            borderColor="borderColor"
+            _hover={{
+              fontWeight: 'semibold',
+            }}
+            onClick={() => {
+              navigate(path)
+            }}
+          >
+            {text}
+          </Text>
+        ))}
+      </AccordionPanel>
+    </AccordionItem>
+  )
+}
+
+CustomAccordionItem.propTypes = {
+  children: PropTypes.any,
+  title: PropTypes.string.isRequired,
+  subtitles: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string,
+      path: PropTypes.string,
+    }),
+  ),
+}
 
 const Header = ({ activeId }) => {
   const navigate = useNavigate()
@@ -178,6 +231,7 @@ const Header = ({ activeId }) => {
         <Drawer
           onClose={onClose}
           placement="left"
+          cursor="pointer"
           isOpen={isOpen}
           size={{ base: 'full', md: 'md' }}
         >
@@ -189,125 +243,13 @@ const Header = ({ activeId }) => {
             </DrawerHeader>
             <DrawerBody color="primaryBlue">
               <Accordion defaultIndex={[0]} allowToggle allowMultiple>
-                <AccordionItem borderColor="primaryBlue">
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      <Text fontSize="20px" fontWeight="500">
-                        Proposal
-                      </Text>
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                  <AccordionPanel pb={4} textAlign="center">
-                    <Text
-                      fontSize="16px"
-                      py="10px"
-                      onClick={() => {
-                        navigate('/proposal/public')
-                      }}
-                    >
-                      Public Proposal
-                    </Text>
-                    <Text
-                      fontSize="16px"
-                      py="10px"
-                      onClick={() => {
-                        navigate('/proposal/private')
-                      }}
-                    >
-                      Private Proposal
-                    </Text>
-                    <Text
-                      fontSize="16px"
-                      py="10px"
-                      onClick={() => {
-                        navigate('/proposal/new')
-                      }}
-                    >
-                      New Proposal
-                    </Text>
-                  </AccordionPanel>
-                </AccordionItem>
-
-                <AccordionItem border="none">
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      <Text fontSize="20px" fontWeight="500">
-                        NFT
-                      </Text>
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                  <AccordionPanel pb={4} textAlign="center">
-                    <Text
-                      fontSize="16px"
-                      py="10px"
-                      onClick={() => {
-                        navigate('/nft/viewnft')
-                      }}
-                    >
-                      NFTs
-                    </Text>
-                    <Text
-                      fontSize="16px"
-                      py="10px"
-                      onClick={() => {
-                        navigate('/nft/mint')
-                      }}
-                    >
-                      Mint NFT
-                    </Text>
-                  </AccordionPanel>
-                </AccordionItem>
-
-                <AccordionItem border="none">
-                  <AccordionButton>
-                    <Box as="span" flex="1" textAlign="left">
-                      <Text fontSize="20px" fontWeight="500">
-                        Manager
-                      </Text>
-                    </Box>
-                    <AccordionIcon />
-                  </AccordionButton>
-                  <AccordionPanel pb={4} textAlign="center">
-                    <Text
-                      fontSize="16px"
-                      py="10px"
-                      onClick={() => {
-                        navigate('/admin/employee')
-                      }}
-                    >
-                      Employee
-                    </Text>
-                    <Text
-                      fontSize="16px"
-                      py="10px"
-                      onClick={() => {
-                        navigate('/admin/nft')
-                      }}
-                    >
-                      NFT
-                    </Text>
-                    <Text
-                      fontSize="16px"
-                      py="10px"
-                      onClick={() => {
-                        navigate('/admin/permission')
-                      }}
-                    >
-                      Permission
-                    </Text>
-                    <Text
-                      fontSize="16px"
-                      py="10px"
-                      onClick={() => {
-                        navigate('/admin/depart_role')
-                      }}
-                    >
-                      Department & Role
-                    </Text>
-                  </AccordionPanel>
-                </AccordionItem>
+                {HeaderItems.map(({ title, subtitles }) => (
+                  <CustomAccordionItem
+                    key={title}
+                    title={title}
+                    subtitles={subtitles}
+                  />
+                ))}
               </Accordion>
             </DrawerBody>
           </DrawerContent>

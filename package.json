@@ -1,5 +1,5 @@
 {
-  "name": "start",
+  "name": "pet2dao-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -30,12 +30,13 @@
     "redux": "^4.2.1",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.2",
-    "web-vitals": "^2.1.4",
+    "web-vitals": "^2.1.4", 
     "web3": "^1.8.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "set NODE_ENV=DEVELOPMENT && react-scripts start",
+    "validate": "set NODE_ENV=PRODUCTION && react-scripts start",
+    "build": "set NODE_ENV=PRODUCTION && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

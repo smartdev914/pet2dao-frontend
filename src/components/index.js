@@ -2,7 +2,7 @@ import ConnectWalletButton from './ConnectWalletButton'
 import Header from './Header'
 import Layout from './Layout'
 import RoundButton from './RoundButton'
-import SideBar from './SideBar'
+import BaseSideBar from './BaseSideBar'
 import CustomTable from './CustomTable'
 import NFTCard from './NFTCard'
 import ProposalPanel from './ProposalPanel'
@@ -12,7 +12,7 @@ export {
   Header,
   Layout,
   RoundButton,
-  SideBar,
+  BaseSideBar,
   CustomTable,
   NFTCard,
   ProposalPanel,

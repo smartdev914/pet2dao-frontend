@@ -1,83 +1,30 @@
-import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { VStack, Image, Text, Box } from '@chakra-ui/react'
-import Logo from 'assets/LOGO2.png'
+import { BaseSideBar } from 'components'
 import { useSelector } from 'react-redux'
+import { ProposalSidebarItems } from 'constants'
 
 const SideBar = ({ activeId }) => {
-  const navigate = useNavigate()
   const user = useSelector((state) => state.userReducer)
+  const [sidebarItems, setSidebarItems] = useState([])
+
+  useEffect(() => {
+    const restrictedItemIds = []
+    if (!user.isApproved) restrictedItemIds.push('private')
+    if (user.permission !== 'admin') restrictedItemIds.push('new')
+
+    const allowedItems = ProposalSidebarItems.items.filter(
+      (e) => !restrictedItemIds.includes(e.id),
+    )
+    setSidebarItems(allowedItems)
+  }, [user])
 
   return (
-    <VStack
-      dir="column"
-      w="22%"
-      border="1px"
-      borderRadius="12px"
-      borderColor="borderColor"
-      color="white"
-      maxH={'500px'}
-      display={{ base: 'none', lg: 'flex' }}
-    >
-      <VStack w="100%">
-        <Image name="logo" src={Logo} height="70px" my="20px" />
-        <Text
-          textAlign="center"
-          fontWeight="bold"
-          fontSize="24px"
-          pt="10px"
-          fontFamily="geomatikBold"
-        >
-          Proposal
-        </Text>
-      </VStack>
-      <VStack w="100%" py="20px" fontFamily="Helvetica" cursor="pointer">
-        <Box
-          width="100%"
-          fontSize="18px"
-          px="24px"
-          py="8px"
-          borderLeft={activeId === 'public' ? '4px' : 'none'}
-          onClick={() => {
-            navigate('/proposal/public')
-          }}
-        >
-          Public Proposal
-        </Box>
-        {user.isApproved && (
-          <React.Fragment>
-            <Box
-              width="100%"
-              fontSize="18px"
-              px="24px"
-              py="8px"
-              borderLeft={activeId === 'private' ? '4px' : 'none'}
-              onClick={() => {
-                navigate('/proposal/private')
-              }}
-            >
-              Private Proposal
-            </Box>
-
-            {user.permission !== 'admin' && (
-              <Box
-                width="100%"
-                fontSize="18px"
-                px="24px"
-                py="8px"
-                borderLeft={activeId === 'new' ? '4px' : 'none'}
-                onClick={() => {
-                  navigate('/proposal/new')
-                }}
-              >
-                New proposal
-              </Box>
-            )}
-          </React.Fragment>
-        )}
-      </VStack>
-    </VStack>
+    <BaseSideBar
+      title={ProposalSidebarItems.title}
+      items={sidebarItems}
+      activeId={activeId}
+    />
   )
 }
 
