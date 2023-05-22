@@ -46,6 +46,8 @@ class BlockchainService {
     if (result.status) return txHash
     else return null
   }
+
+  checkIsAddress = (address) => this.web3.utils.isAddress(address)
 }
 
 const blockchainService = new BlockchainService()

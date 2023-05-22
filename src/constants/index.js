@@ -1,3 +1,5 @@
+const DEFAULT_ADMIN_ROLE =
+  '0x0000000000000000000000000000000000000000000000000000000000000000'
 const HeaderItems = [
   {
     title: 'Proposal',
@@ -77,4 +79,9 @@ const ProposalSidebarItems = {
   ],
 }
 
-export { HeaderItems, ManagerSideBarItems, ProposalSidebarItems }
+export {
+  DEFAULT_ADMIN_ROLE,
+  HeaderItems,
+  ManagerSideBarItems,
+  ProposalSidebarItems,
+}

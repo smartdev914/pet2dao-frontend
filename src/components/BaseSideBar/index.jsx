@@ -15,6 +15,8 @@ const BaseSideBar = ({ title, items, activeId }) => {
       borderRadius="12px"
       borderColor="borderColor"
       color="white"
+      maxH={'500px'}
+      display={{ base: 'none', lg: 'flex' }}
     >
       <VStack w="100%">
         <Image name="logo" src={Logo} height="70px" my="20px" />

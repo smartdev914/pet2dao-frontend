@@ -14,7 +14,7 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon, CloseIcon } from '@chakra-ui/icons'
 import SideBar from './sidebar'
-import { DEFAULT_ADMIN_ROLE } from 'const'
+import { DEFAULT_ADMIN_ROLE } from 'constants'
 import { roleNFTService } from 'services/blockchain/roleNFTService'
 import { useWeb3React } from '@web3-react/core'
 

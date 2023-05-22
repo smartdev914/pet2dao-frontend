@@ -2,9 +2,10 @@ import React from 'react'
 import { Button } from '@chakra-ui/react'
 import PropTypes from 'prop-types'
 
-const RoundButton = ({ children, onClick, theme, width }) => {
+const RoundButton = ({ children, onClick, theme, width, type }) => {
   return (
     <Button
+      type={type}
       border="1px"
       borderColor={theme === 'purple' ? '#384aff' : 'borderColor'}
       height="46px"
@@ -35,6 +36,7 @@ RoundButton.propTypes = {
   onClick: PropTypes.func.isRequired,
   theme: PropTypes.string,
   width: PropTypes.string,
+  type: PropTypes.string,
 }
 
 export default RoundButton

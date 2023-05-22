@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Layout, CustomTable, RoundButton } from 'components'
 import {
   Flex,
@@ -11,12 +11,15 @@ import {
   AlertDialogHeader,
   AlertDialogContent,
   AlertDialogOverlay,
-  // Button,
   useDisclosure,
   useToast,
+  IconButton,
+  Button,
 } from '@chakra-ui/react'
+import { EditIcon } from '@chakra-ui/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import SideBar from './sidebar'
+import EditEmployee from './editEmployee'
 import { getAllEmployee, updateEmployee } from 'store/actions/employeeAction'
 import { shortWeb3Acount } from 'utils/utils'
 
@@ -67,14 +70,31 @@ function Employee() {
         )
       },
     },
+    {
+      Header: 'Edit',
+      id: 'edit',
+      Cell: (item) => {
+        return (
+          <Flex justifyContent="center">
+            <IconButton
+              size="sm"
+              onClick={() => editEmployee(item.row.original)}
+              icon={<EditIcon />}
+            />
+          </Flex>
+        )
+      },
+    },
   ]
 
   const toast = useToast()
   const dispatch = useDispatch()
   const managerDisclosure = useDisclosure()
+  const editDisclosure = useDisclosure()
   const targetManagerId = useRef(0)
   const targetUserId = useRef(0)
   const currentSelectedColumn = useRef(null)
+  const [selectedEmployee, setSelectedEmployee] = useState(null)
   const employeeReducer = useSelector((state) => state.employeeReducer)
   const { employee } = employeeReducer
 
@@ -116,6 +136,17 @@ function Employee() {
     dispatch(updateEmployee(currentEmployee.id, { ...data }, toast))
   }
 
+  const editEmployee = (item) => {
+    setSelectedEmployee(item)
+    console.log(selectedEmployee)
+    editDisclosure.onOpen()
+  }
+
+  const handleCreateEmployee = () => {
+    setSelectedEmployee(null)
+    editDisclosure.onOpen()
+  }
+
   useEffect(() => {
     dispatch(getAllEmployee())
   }, [])
@@ -131,7 +162,15 @@ function Employee() {
             overflowX={{ base: 'scroll', md: 'auto' }}
             alignItems="baseline"
           >
-            <Flex w="100%" pb={'20px'} direction="column">
+            <Flex
+              w="100%"
+              pb={'20px'}
+              direction="row"
+              justifyContent={'space-between'}
+            >
+              <Button mr={3} sx={{ display: { md: 'contents', sm: 'none' } }}>
+                Create
+              </Button>
               <Text
                 fontSize={{ base: '24px', md: '28px' }}
                 textAlign={'center'}
@@ -139,6 +178,9 @@ function Employee() {
               >
                 Employee
               </Text>
+              <RoundButton onClick={handleCreateEmployee} mr={3} theme="purple">
+                Create
+              </RoundButton>
             </Flex>
             <CustomTable columns={columns} data={convertedEmployee} />
           </VStack>
@@ -174,6 +216,12 @@ function Employee() {
           </AlertDialogContent>
         </AlertDialogOverlay>
       </AlertDialog>
+
+      <EditEmployee
+        employee={selectedEmployee}
+        isOpen={editDisclosure.isOpen}
+        onClose={editDisclosure.onClose}
+      />
     </React.Fragment>
   )
 }
