@@ -11,6 +11,6 @@
   ],
   "pinataApiKey": "b1e113c1fb3b69ab3f19",
   "pinataSecretApiKey": "c0493a1d8b9a399f4cd12f709c63a4836c4973c23f0ef818a9a538473d86370f",
-  "apiEndpoint": "http://localhost:5000",
+  "apiEndpoint": "http://localhost:5000/api",
   "baseUrl": "https://gateway.pinata.cloud/ipfs/"
 }

@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react'
 import { useWeb3React } from '@web3-react/core'
 import SideBar from './sidebar'
-import { client } from 'services/api/useApi'
+import { api } from 'services/api/useApi'
 import { roleNFTService } from 'services/blockchain/roleNFTService'
 import { findOneByAccountAddr } from 'store/actions/employeeAction'
 
@@ -27,14 +27,8 @@ function NFT() {
   const toast = useToast()
 
   const fetchPendingNFT = async () => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-    }
-
-    client('/api/nft/findAll', 'GET', customOption)
+    api
+      .get('/nft/findAll')
       .then(function (response) {
         if (response.status === 200) {
           setPendingNFT(response.data)
@@ -46,15 +40,8 @@ function NFT() {
   }
 
   const updateDBNFT = async (id, customData) => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-      data: { ...customData },
-    }
-
-    client(`/api/nft/update/${id}`, 'PUT', customOption)
+    api
+      .put(`/nft/update/${id}`, customData)
       .then(function (response) {
         if (response.status === 200) {
           toast({

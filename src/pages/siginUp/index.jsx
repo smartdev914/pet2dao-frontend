@@ -10,22 +10,20 @@ import {
   Heading,
   Image,
   Select,
-  useToast,
 } from '@chakra-ui/react'
 import { useEffect } from 'react'
 import { useWeb3React } from '@web3-react/core'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useFormik } from 'formik'
-import axios from 'axios'
+import { api } from 'services/api/useApi'
+import { toastSuccess, toastError } from 'utils/log'
 
 import Logo from 'assets/LOGO.png'
-import config from 'config/index'
 
 export default function Signup() {
   const { account } = useWeb3React()
   const navigate = useNavigate()
-  const toast = useToast()
   const employeeReducer = useSelector((state) => state.employeeReducer)
 
   useEffect(() => {
@@ -45,44 +43,29 @@ export default function Signup() {
     },
     onSubmit: async (values) => {
       if (values.name === '') {
-        toast({
-          title: `Name must not be empty!`,
-          position: 'top-right',
-          isClosable: true,
-        })
+        toastError(`Name must not be empty!`)
         return
       }
       const { name, department, role } = values
-      const options = {
-        method: 'POST',
-        url: `${config.apiEndpoint}/api/employee/create`,
-        headers: {
-          'content-type': 'application/json',
-          Accept: 'application/json',
-        },
-        data: {
-          name: name,
-          departmentId: parseInt(department),
-          roleId: parseInt(role),
-          accountAddr: account,
-          isApproved: false,
-          isManager: false,
-        },
+      const newEmployee = {
+        name: name,
+        departmentId: parseInt(department),
+        roleId: parseInt(role),
+        accountAddr: account,
+        isApproved: false,
+        isManager: false,
       }
-      await axios
-        .request(options)
+
+      api
+        .post('/employee/create', newEmployee)
         .then(function (response) {
           if (response.data.id) {
-            toast({
-              title: `Please wait until approved.`,
-              position: 'top-right',
-              isClosable: true,
-            })
+            toastSuccess(`Please wait until approved.`)
             navigate('/proposal/public')
           }
         })
         .catch(function (error) {
-          console.error(error)
+          toastError('Sign Up Error', 'Sign Up Error', error)
         })
     },
   })

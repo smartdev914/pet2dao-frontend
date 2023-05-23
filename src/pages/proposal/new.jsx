@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import SideBar from './sidebar'
 import { uploadProposaltoIPFS } from 'services/api/uploader'
 import { daoService } from 'services/blockchain/DAOService'
-import { client } from 'services/api/useApi'
+import { api } from 'services/api/useApi'
 import { createProposal } from 'store/actions/proposalAction'
 
 const visibleType = {
@@ -63,21 +63,10 @@ function NewProposal() {
   }
 
   const encrypt = async (text) => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-      data: {
-        text: text,
-      },
-    }
     try {
-      const response = await client(
-        '/api/proposal/encrypt',
-        'POST',
-        customOption,
-      )
+      const response = await api.post('/api/proposal/encrypt', {
+        text: text,
+      })
       return response.data.text
     } catch (e) {
       console.log(e)

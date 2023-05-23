@@ -15,7 +15,7 @@ import { toUtf8Bytes } from '@ethersproject/strings'
 import { useWeb3React } from '@web3-react/core'
 import SideBar from './sidebar'
 import { daoService } from 'services/blockchain/DAOService'
-import { client } from 'services/api/useApi'
+import { api } from 'services/api/useApi'
 import PermissionTabPanel from 'components/PermissionTabPanel'
 
 function Permission() {
@@ -32,16 +32,8 @@ function Permission() {
     return new Promise((resolve, reject) => {
       ;(async () => {
         try {
-          const token = JSON.parse(localStorage.getItem('token'))
-          const customOption = {
-            headers: {
-              Authorization: token,
-            },
-          }
-          const _permission = await client(
-            `/api/permission/findOneByKeccak256/${_keccak256}`,
-            'GET',
-            customOption,
+          const _permission = await api.get(
+            `/permission/findOneByKeccak256/${_keccak256}`,
           )
           resolve(_permission.data)
         } catch (e) {
@@ -98,20 +90,13 @@ function Permission() {
   }
 
   const addPermissiontoDB = async (_keccak256, _department, _role, _level) => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-      data: {
+    api
+      .post('/permission/create', {
         keccak256: _keccak256,
         department: _department,
         role: _role,
         level: _level,
-      },
-    }
-
-    client('/api/permission/create', 'POST', customOption)
+      })
       .then(function (response) {
         if (response.status === 200) {
           toast({
@@ -161,13 +146,8 @@ function Permission() {
   const handlePermissionDelete = async (index, id) => {
     const hash = await daoService.deletePermission(account, currentLevel, index)
     if (hash) {
-      const token = JSON.parse(localStorage.getItem('token'))
-      const customOption = {
-        headers: {
-          Authorization: token,
-        },
-      }
-      client(`/api/permission/delete/${id}`, 'DELETE', customOption)
+      api
+        .delete(`/permission/delete/${id}`)
         .then(function (response) {
           if (response.data) {
             getAllPermissions()

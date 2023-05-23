@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux'
 import SideBar from './sidebar'
 import { useWeb3React } from '@web3-react/core'
 import { uploadIPFS } from 'services/api/uploader'
-import { client } from 'services/api/useApi'
+import { api } from 'services/api/useApi'
 import { useNavigate } from 'react-router-dom'
 
 function MintNFT() {
@@ -50,21 +50,15 @@ function MintNFT() {
       return
     }
 
-    const token = JSON.parse(localStorage.getItem('token'))
     setIsLoading(true)
     const ipfsHash = await uploadIPFS(user, mydata.file)
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-      data: {
+    setIsLoading(false)
+    api
+      .post('/nft/create', {
         metaDataURI: ipfsHash.data.IpfsHash,
         employeeId: user.id,
         isApproved: false,
-      },
-    }
-    setIsLoading(false)
-    client('/api/nft/create', 'POST', customOption)
+      })
       .then(function (response) {
         console.log(response)
         if (response.status === 200) {

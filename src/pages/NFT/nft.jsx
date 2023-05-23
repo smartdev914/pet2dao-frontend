@@ -13,7 +13,7 @@ import {
   Spinner,
 } from '@chakra-ui/react'
 import SideBar from './sidebar'
-import { client } from 'services/api/useApi'
+import { api } from 'services/api/useApi'
 import { roleNFTService } from 'services/blockchain/roleNFTService'
 import { findOneByAccountAddr } from 'store/actions/employeeAction'
 
@@ -23,14 +23,8 @@ function ViewNFT() {
   const [isLoading, setIsLoading] = useState([])
 
   const fetchPendingNFT = async () => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-    }
-
-    client('/api/nft/findAll', 'GET', customOption)
+    api
+      .get('/nft/findAll')
       .then(function (response) {
         if (response.status === 200) {
           setPendingNFT(response.data)

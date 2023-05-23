@@ -16,11 +16,15 @@ import {
   IconButton,
   Button,
 } from '@chakra-ui/react'
-import { EditIcon } from '@chakra-ui/icons'
+import { EditIcon, DeleteIcon } from '@chakra-ui/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import SideBar from './sidebar'
 import EditEmployee from './editEmployee'
-import { getAllEmployee, updateEmployee } from 'store/actions/employeeAction'
+import {
+  getAllEmployee,
+  updateEmployee,
+  deleteEmployee,
+} from 'store/actions/employeeAction'
 import { shortWeb3Acount } from 'utils/utils'
 
 function Employee() {
@@ -78,8 +82,13 @@ function Employee() {
           <Flex justifyContent="center">
             <IconButton
               size="sm"
-              onClick={() => editEmployee(item.row.original)}
+              onClick={() => handleEditEmployee(item.row.original)}
               icon={<EditIcon />}
+            />
+            <IconButton
+              size="sm"
+              onClick={() => handleDeleteIcon(item.row.original.id)}
+              icon={<DeleteIcon />}
             />
           </Flex>
         )
@@ -95,6 +104,7 @@ function Employee() {
   const targetUserId = useRef(0)
   const currentSelectedColumn = useRef(null)
   const [selectedEmployee, setSelectedEmployee] = useState(null)
+  const [isDelete, setIsDelete] = useState(false)
   const employeeReducer = useSelector((state) => state.employeeReducer)
   const { employee } = employeeReducer
 
@@ -117,6 +127,12 @@ function Employee() {
     managerDisclosure.onOpen()
   }
 
+  const handleDeleteIcon = (index) => {
+    setIsDelete(true)
+    targetUserId.current = index
+    managerDisclosure.onOpen()
+  }
+
   const handleManagerUpdate = () => {
     managerDisclosure.onClose()
     const currentEmployee =
@@ -136,10 +152,16 @@ function Employee() {
     dispatch(updateEmployee(currentEmployee.id, { ...data }, toast))
   }
 
-  const editEmployee = (item) => {
-    setSelectedEmployee(item)
+  const handleEditEmployee = (employee) => {
+    setSelectedEmployee(employee)
     console.log(selectedEmployee)
     editDisclosure.onOpen()
+  }
+
+  const handleDeleteEmployee = () => {
+    dispatch(deleteEmployee(targetUserId.current, toast))
+    setIsDelete(false)
+    managerDisclosure.onClose()
   }
 
   const handleCreateEmployee = () => {
@@ -168,8 +190,12 @@ function Employee() {
               direction="row"
               justifyContent={'space-between'}
             >
-              <Button mr={3} sx={{ display: { md: 'contents', sm: 'none' } }}>
-                Create
+              <Button
+                mr={3}
+                onClick={() => {}}
+                sx={{ display: { md: 'contents', sm: 'none', xs: 'none' } }}
+              >
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               </Button>
               <Text
                 fontSize={{ base: '24px', md: '28px' }}
@@ -198,19 +224,23 @@ function Employee() {
               fontWeight="bold"
               color="primaryBlack"
             >
-              Update Employee
+              {isDelete ? 'Delete' : 'Update'} Employee
             </AlertDialogHeader>
 
             <AlertDialogBody>
-              Are you sure? This Employee will be updated.
+              Are you sure? This Employee will be{' '}
+              {isDelete ? 'deleted' : 'updated'}.
             </AlertDialogBody>
 
             <AlertDialogFooter>
               <RoundButton onClick={managerDisclosure.onClose}>
                 Cancel
               </RoundButton>
-              <RoundButton onClick={handleManagerUpdate} ml={3}>
-                Update
+              <RoundButton
+                onClick={isDelete ? handleDeleteEmployee : handleManagerUpdate}
+                ml={3}
+              >
+                {isDelete ? 'Delete' : 'Update'}
               </RoundButton>
             </AlertDialogFooter>
           </AlertDialogContent>

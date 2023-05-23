@@ -14,9 +14,11 @@ import {
   Input,
   Select,
   Text,
+  useToast,
 } from '@chakra-ui/react'
 import { Formik } from 'formik'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { updateEmployee } from 'store/actions/employeeAction'
 import { validateName, validateEthAddr } from 'utils/utils'
 
 const MainFormLabel = ({ label, upperCase }) => {
@@ -39,28 +41,47 @@ MainFormLabel.propTypes = {
 
 function EditEmployee({ employee, isOpen, onClose }) {
   const employeeReducer = useSelector((state) => state.employeeReducer)
+  const dispatch = useDispatch()
+  const toast = useToast()
 
   const formik = {
     initialValues: employee
       ? {
           ...employee,
-          department: employee.department.name,
-          role: employee.role.name,
+          departmentId: employee.departmentId,
+          roleId: employee.roleId,
         }
       : {
           name: '',
-          department: { name: '' },
-          role: { name: '' },
+          departmentId: 0,
+          role: 0,
           accountAddr: '',
         },
     validate: (values) => {
       const errors = {}
-      errors.name = validateName(values.name)
-      errors.accountAddr = validateEthAddr(values.accountAddr)
+      if (validateName(values.name)) errors.name = validateName(values.name)
+      if (validateEthAddr(values.accountAddr))
+        errors.accountAddr = validateEthAddr(values.accountAddr)
       return errors
     },
-    onSubmit: async (values) => {
-      console.log(values)
+    onSubmit: (values) => {
+      if (values.id) {
+        console.log(values)
+        dispatch(
+          updateEmployee(
+            values.id,
+            {
+              ...values,
+              departmentId: parseInt(values.departmentId),
+              roleId: parseInt(values.roleId),
+            },
+            toast,
+          ),
+        )
+      } else {
+        // dispatch(createEmpl)
+      }
+      onClose()
     },
   }
 
@@ -92,110 +113,113 @@ function EditEmployee({ employee, isOpen, onClose }) {
               errors,
               touched,
               handleChange,
-              handleSubmit,
               handleBlur,
-            }) => {
-              return (
-                <form onSubmit={handleSubmit}>
-                  <ModalBody>
-                    <VStack
-                      width={'100%'}
-                      borderColor="secondaryBorderColor"
-                      color={'whiteAlpha.800'}
-                    >
-                      <FormControl isRequired>
-                        <MainFormLabel label="Name" />
-                        <Input
-                          name="name"
-                          spellCheck="false"
-                          placeholder="Name"
-                          value={values.name}
-                          onChange={handleChange}
-                          onBlur={handleBlur}
-                        />
-                        {errors.name && touched.name && (
-                          <Text color="red.500"> {errors.name}</Text>
-                        )}
-                      </FormControl>
+              handleSubmit,
+            }) => (
+              <form onSubmit={handleSubmit}>
+                <ModalBody>
+                  <VStack
+                    width={'100%'}
+                    borderColor="secondaryBorderColor"
+                    color={'whiteAlpha.800'}
+                  >
+                    <FormControl isRequired>
+                      <MainFormLabel label="Name" />
+                      <Input
+                        name="name"
+                        spellCheck="false"
+                        placeholder="Name"
+                        value={values.name}
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                      />
+                      {errors.name && touched.name && (
+                        <Text color="red.500"> {errors.name}</Text>
+                      )}
+                    </FormControl>
 
-                      <FormControl isRequired>
-                        <MainFormLabel label="Department" />
-                        <Select
-                          name="department"
-                          type="text"
-                          borderColor="borderColor"
-                          onChange={handleChange}
-                          value={values.department}
-                          onBlur={handleBlur}
-                        >
-                          {employeeReducer.department.map((item) => (
-                            <option
-                              key={item.name}
-                              style={{
-                                color: 'rgb(75, 174, 226)',
-                                background: 'rgb(0, 5, 5)',
-                                fontSize: '20px',
-                              }}
-                              value={item.name}
-                            >
-                              {item.name}
-                            </option>
-                          ))}
-                        </Select>
-                      </FormControl>
+                    <FormControl isRequired>
+                      <MainFormLabel label="Department" />
+                      <Select
+                        name="departmentId"
+                        type="text"
+                        borderColor="borderColor"
+                        onChange={handleChange}
+                        value={values.departmentId}
+                        onBlur={handleBlur}
+                      >
+                        {employeeReducer.department.map((item) => (
+                          <option
+                            key={item.id}
+                            style={{
+                              color: 'rgb(75, 174, 226)',
+                              background: 'rgb(0, 5, 5)',
+                              fontSize: '20px',
+                            }}
+                            value={item.id}
+                          >
+                            {item.name}
+                          </option>
+                        ))}
+                      </Select>
+                    </FormControl>
 
-                      <FormControl isRequired>
-                        <MainFormLabel label="Role" />
-                        <Select
-                          name="role"
-                          type="text"
-                          borderColor="borderColor"
-                          onChange={handleChange}
-                          value={values.role}
-                          onBlur={handleBlur}
-                        >
-                          {employeeReducer.role.map((item) => (
-                            <option
-                              key={item.name}
-                              style={{
-                                color: 'rgb(75, 174, 226)',
-                                background: 'rgb(0, 5, 5)',
-                                fontSize: '20px',
-                              }}
-                              value={item.name}
-                            >
-                              {item.name}
-                            </option>
-                          ))}
-                        </Select>
-                      </FormControl>
+                    <FormControl isRequired>
+                      <MainFormLabel label="Role" />
+                      <Select
+                        name="roleId"
+                        type="text"
+                        borderColor="borderColor"
+                        onChange={handleChange}
+                        value={values.roleId}
+                        onBlur={handleBlur}
+                      >
+                        {employeeReducer.role.map((item) => (
+                          <option
+                            key={item.id}
+                            style={{
+                              color: 'rgb(75, 174, 226)',
+                              background: 'rgb(0, 5, 5)',
+                              fontSize: '20px',
+                            }}
+                            value={item.id}
+                          >
+                            {item.name}
+                          </option>
+                        ))}
+                      </Select>
+                    </FormControl>
 
-                      <FormControl isRequired>
-                        <MainFormLabel label="Account Address" />
-                        <Input
-                          name="accountAddr"
-                          type="text"
-                          placeholder="Account Address"
-                          onChange={handleChange}
-                          value={values.accountAddr}
-                          onBlur={handleBlur}
-                        />
-                        {errors.accountAddr && touched.accountAddr && (
-                          <Text color="red.500"> {errors.accountAddr}</Text>
-                        )}
-                      </FormControl>
-                    </VStack>
-                  </ModalBody>
+                    <FormControl isRequired>
+                      <MainFormLabel label="Account Address" />
+                      <Input
+                        name="accountAddr"
+                        type="text"
+                        placeholder="Account Address"
+                        onChange={handleChange}
+                        value={values.accountAddr}
+                        onBlur={handleBlur}
+                      />
+                      {errors.accountAddr && touched.accountAddr && (
+                        <Text color="red.500"> {errors.accountAddr}</Text>
+                      )}
+                    </FormControl>
+                  </VStack>
+                </ModalBody>
 
-                  <ModalFooter>
-                    <RoundButton onClick={onClose}>Cancel</RoundButton>
-                    <RoundButton theme="purple" type="submit" ml={3}>
-                      Save
-                    </RoundButton>
-                  </ModalFooter>
-                </form>
-              )
-            }}
+                <ModalFooter>
+                  <RoundButton onClick={onClose}>Cancel</RoundButton>
+                  <RoundButton
+                    theme="purple"
+                    type="submit"
+                    ml={3}
+                    onClick={() => {}}
+                  >
+                    Save
+                  </RoundButton>
+                </ModalFooter>
+              </form>
+            )}
           </Formik>
         </ModalContent>
       </ModalOverlay>

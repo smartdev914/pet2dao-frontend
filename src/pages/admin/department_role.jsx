@@ -15,7 +15,7 @@ import { AddIcon, CloseIcon } from '@chakra-ui/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import { getAllDepartment, getAllRole } from 'store/actions/employeeAction'
 import SideBar from './sidebar'
-import { client } from 'services/api/useApi'
+import { api } from 'services/api/useApi'
 
 function DeparmentRole() {
   const toast = useToast()
@@ -34,17 +34,10 @@ function DeparmentRole() {
       })
       return
     }
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-      data: {
+    api
+      .post('/api/department/create', {
         name: _department,
-      },
-    }
-
-    client('/api/department/create', 'POST', customOption)
+      })
       .then(function (response) {
         if (response.data.id) {
           toast({
@@ -62,13 +55,8 @@ function DeparmentRole() {
   }
 
   const handleDepartmentDelete = (item) => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-    }
-    client(`/api/department/delete/${item.id}`, 'DELETE', customOption)
+    api
+      .delete(`/department/delete/${item.id}`)
       .then(function (response) {
         if (response.data) {
           toast({
@@ -93,16 +81,10 @@ function DeparmentRole() {
       })
       return
     }
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-      data: {
+    api
+      .post('/role/create', {
         name: _role,
-      },
-    }
-    client('/api/role/create', 'POST', customOption)
+      })
       .then(function (response) {
         if (response.data.id) {
           toast({
@@ -120,13 +102,8 @@ function DeparmentRole() {
   }
 
   const handleRoleDelete = (item) => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-    }
-    client(`/api/role/delete/${item.id}`, 'DELETE', customOption)
+    api
+      .delete(`/role/delete/${item.id}`)
       .then(function (response) {
         if (response.data) {
           toast({

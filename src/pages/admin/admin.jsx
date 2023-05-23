@@ -10,13 +10,13 @@ import {
   IconButton,
   HStack,
   Spinner,
-  useToast,
 } from '@chakra-ui/react'
 import { AddIcon, CloseIcon } from '@chakra-ui/icons'
 import SideBar from './sidebar'
 import { DEFAULT_ADMIN_ROLE } from 'constants'
 import { roleNFTService } from 'services/blockchain/roleNFTService'
 import { useWeb3React } from '@web3-react/core'
+import { toastSuccess, toastError } from 'utils/log'
 
 function Admin() {
   const [address, setAddress] = useState('')
@@ -24,7 +24,6 @@ function Admin() {
   const [isLoading, setIsLoading] = useState(false)
   const { account } = useWeb3React()
 
-  const toast = useToast()
   const fetchAddressByID = async (ID) => {
     return new Promise((resolve, reject) => {
       ;(async () => {
@@ -61,28 +60,16 @@ function Admin() {
 
   const handleAdd = async () => {
     if (address === '') {
-      toast({
-        title: `Please input the account address.`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastError(`Please input the account address.`)
       return
     }
 
     const hash = await roleNFTService.addAdmin(account, address)
     if (hash) {
       fetchAddress()
-      toast({
-        title: `New address is added successfully`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastSuccess(`New address is added successfully`)
     } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastError('Error occurs in the BlockChain')
     }
   }
   const handleDelete = async (_address) => {
@@ -93,17 +80,9 @@ function Admin() {
     )
     if (hash) {
       fetchAddress()
-      toast({
-        title: `Address is deleted successfully`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastSuccess(`Address is deleted successfully`)
     } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastError('Error occurs in the BlockChain')
     }
   }
 
