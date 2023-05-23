@@ -10,6 +10,10 @@ const toastError = (title, errorType = '', error = '') => {
   if (errorType !== '') console.error(`${errorType}:`, error)
 }
 
+const toastServerError = () => {}
+
+const toastBlockchainError = () => {}
+
 const toastSuccess = (title) => {
   toast({
     title: `${title}`,
@@ -19,4 +23,4 @@ const toastSuccess = (title) => {
   })
 }
 
-export { toastError, toastSuccess }
+export { toastError, toastSuccess, toastServerError, toastBlockchainError }

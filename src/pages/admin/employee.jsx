@@ -12,7 +12,6 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
   useDisclosure,
-  useToast,
   IconButton,
   Button,
 } from '@chakra-ui/react'
@@ -96,7 +95,6 @@ function Employee() {
     },
   ]
 
-  const toast = useToast()
   const dispatch = useDispatch()
   const managerDisclosure = useDisclosure()
   const editDisclosure = useDisclosure()
@@ -149,7 +147,7 @@ function Employee() {
         : {
             isApproved: !currentEmployee.isApproved,
           }
-    dispatch(updateEmployee(currentEmployee.id, { ...data }, toast))
+    dispatch(updateEmployee(currentEmployee.id, { ...data }))
   }
 
   const handleEditEmployee = (employee) => {
@@ -159,7 +157,7 @@ function Employee() {
   }
 
   const handleDeleteEmployee = () => {
-    dispatch(deleteEmployee(targetUserId.current, toast))
+    dispatch(deleteEmployee(targetUserId.current))
     setIsDelete(false)
     managerDisclosure.onClose()
   }

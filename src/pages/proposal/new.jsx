@@ -8,7 +8,6 @@ import {
   Input,
   Textarea,
   Box,
-  useToast,
   Spinner,
   Radio,
   RadioGroup,
@@ -21,6 +20,7 @@ import { uploadProposaltoIPFS } from 'services/api/uploader'
 import { daoService } from 'services/blockchain/DAOService'
 import { api } from 'services/api/useApi'
 import { createProposal } from 'store/actions/proposalAction'
+import { toastSuccess, toastError } from 'utils/log'
 
 const visibleType = {
   private: 'private',
@@ -28,7 +28,6 @@ const visibleType = {
 }
 
 function NewProposal() {
-  const toast = useToast()
   const [fileData, setData] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -75,11 +74,7 @@ function NewProposal() {
 
   const handleCreate = async () => {
     if (title === '') {
-      toast({
-        title: `Title is required`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastError(`Title is required`)
       return
     }
     const isPublic = visible === visibleType.public
@@ -105,11 +100,7 @@ function NewProposal() {
       setTitle('')
       setDescription('')
       setVisible(visibleType.private)
-      toast({
-        title: `New proposal created successfully`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastSuccess(`New proposal created successfully`)
     }
   }
 

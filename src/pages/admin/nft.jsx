@@ -11,20 +11,24 @@ import {
   TabPanel,
   SimpleGrid,
   Spinner,
-  useToast,
 } from '@chakra-ui/react'
 import { useWeb3React } from '@web3-react/core'
 import SideBar from './sidebar'
 import { api } from 'services/api/useApi'
 import { roleNFTService } from 'services/blockchain/roleNFTService'
 import { findOneByAccountAddr } from 'store/actions/employeeAction'
+import {
+  toastSuccess,
+  toastError,
+  toastBlockchainError,
+  toastServerError,
+} from 'utils/log'
 
 function NFT() {
   const [pendingNFT, setPendingNFT] = useState([])
   const [approvedNFT, setApprovedNFT] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const { account } = useWeb3React()
-  const toast = useToast()
 
   const fetchPendingNFT = async () => {
     api
@@ -44,17 +48,9 @@ function NFT() {
       .put(`/nft/update/${id}`, customData)
       .then(function (response) {
         if (response.status === 200) {
-          toast({
-            title: `NFT minted Successfully.`,
-            position: 'top-right',
-            isClosable: true,
-          })
+          toastSuccess(`NFT minted Successfully.`)
         } else {
-          toast({
-            title: 'Error occurs in the Server',
-            position: 'top-right',
-            isClosable: true,
-          })
+          toastServerError()
         }
       })
       .catch(function (error) {
@@ -76,22 +72,14 @@ function NFT() {
       fetchPendingNFT()
       fetchMintedNFT()
     } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastBlockchainError()
     }
     setIsLoading(false)
   }
 
   const handleBurn = async (tokenId) => {
     if (!tokenId || tokenId < 1) {
-      toast({
-        title: 'Invalid TokenId',
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastError('Invalid TokenId')
       return
     }
 
@@ -99,18 +87,10 @@ function NFT() {
     const hash = await roleNFTService.burnNFT(account, tokenId)
     if (hash) {
       await fetchMintedNFT()
-      toast({
-        title: `NFT is burnt successfully`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastSuccess(`NFT is burnt successfully`)
     } else {
       console.log(hash)
-      toast({
-        title: `Error occurs in the BlockChain`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastError(`Error occurs in the BlockChain`)
     }
     setIsLoading(false)
   }

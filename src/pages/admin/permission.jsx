@@ -8,7 +8,6 @@ import {
   TabList,
   Tab,
   TabPanels,
-  useToast,
 } from '@chakra-ui/react'
 import { keccak256 } from '@ethersproject/keccak256'
 import { toUtf8Bytes } from '@ethersproject/strings'
@@ -17,6 +16,7 @@ import SideBar from './sidebar'
 import { daoService } from 'services/blockchain/DAOService'
 import { api } from 'services/api/useApi'
 import PermissionTabPanel from 'components/PermissionTabPanel'
+import { toastSuccess, toastBlockchainError } from 'utils/log'
 
 function Permission() {
   const [isLoading, setIsLoading] = useState(false)
@@ -25,7 +25,6 @@ function Permission() {
   const [currentRole, setCurrentRole] = useState('')
   const [currentLevel, setCurrentLevel] = useState(0)
 
-  const toast = useToast()
   const { account } = useWeb3React()
 
   const fetchPermissionByKeccak256 = async (_keccak256) => {
@@ -99,11 +98,7 @@ function Permission() {
       })
       .then(function (response) {
         if (response.status === 200) {
-          toast({
-            title: `New permission added successfully.`,
-            position: 'top-right',
-            isClosable: true,
-          })
+          toastSuccess(`New permission added successfully.`)
         }
       })
       .catch(function (error) {
@@ -113,11 +108,7 @@ function Permission() {
 
   const handlePermissionAdd = async () => {
     if (currentDepartment == '' || currentRole === '') {
-      toast({
-        title: `Please select the department and role.`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastSuccess(`Please select the department and role.`)
       return
     }
 
@@ -135,11 +126,7 @@ function Permission() {
       )
       getAllPermissions()
     } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastBlockchainError()
     }
   }
 
@@ -151,22 +138,14 @@ function Permission() {
         .then(function (response) {
           if (response.data) {
             getAllPermissions()
-            toast({
-              title: `Permission deleted Successfully.`,
-              position: 'top-right',
-              isClosable: true,
-            })
+            toastSuccess(`Permission deleted Successfully.`)
           }
         })
         .catch(function (error) {
           console.error(error)
         })
     } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastBlockchainError()
     }
   }
 

@@ -14,7 +14,6 @@ import {
   Input,
   Select,
   Text,
-  useToast,
 } from '@chakra-ui/react'
 import { Formik } from 'formik'
 import { useSelector, useDispatch } from 'react-redux'
@@ -42,7 +41,6 @@ MainFormLabel.propTypes = {
 function EditEmployee({ employee, isOpen, onClose }) {
   const employeeReducer = useSelector((state) => state.employeeReducer)
   const dispatch = useDispatch()
-  const toast = useToast()
 
   const formik = {
     initialValues: employee
@@ -68,15 +66,11 @@ function EditEmployee({ employee, isOpen, onClose }) {
       if (values.id) {
         console.log(values)
         dispatch(
-          updateEmployee(
-            values.id,
-            {
-              ...values,
-              departmentId: parseInt(values.departmentId),
-              roleId: parseInt(values.roleId),
-            },
-            toast,
-          ),
+          updateEmployee(values.id, {
+            ...values,
+            departmentId: parseInt(values.departmentId),
+            roleId: parseInt(values.roleId),
+          }),
         )
       } else {
         // dispatch(createEmpl)

@@ -6,7 +6,6 @@ import {
   VStack,
   FormControl,
   FormLabel,
-  useToast,
   Spinner,
 } from '@chakra-ui/react'
 import { useSelector } from 'react-redux'
@@ -15,38 +14,26 @@ import { useWeb3React } from '@web3-react/core'
 import { uploadIPFS } from 'services/api/uploader'
 import { api } from 'services/api/useApi'
 import { useNavigate } from 'react-router-dom'
+import { toastError, toastSuccess } from 'utils/log'
 
 function MintNFT() {
   const [mydata, setData] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const user = useSelector((state) => state.userReducer)
   const { account } = useWeb3React()
-  const toast = useToast()
   const navigate = useNavigate()
 
   const requestMint = async () => {
     if (!mydata.file) {
-      toast({
-        title: `Please select image.`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastError(`Please select image.`)
       return
     }
 
     if (user.permission === 'admin') {
-      toast({
-        title: `You are administrator, you don't need to mint`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastError(`You are administrator, you don't need to mint`)
       return
     } else if (!user.isManager) {
-      toast({
-        title: `You are not manager`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastError(`You are not manager`)
       return
     }
 
@@ -62,11 +49,7 @@ function MintNFT() {
       .then(function (response) {
         console.log(response)
         if (response.status === 200) {
-          toast({
-            title: `Minting request is made successfully`,
-            position: 'top-right',
-            isClosable: true,
-          })
+          toastSuccess(`Minting request is made successfully`)
           navigate('/nft/viewnft')
         }
       })

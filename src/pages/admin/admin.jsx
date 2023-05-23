@@ -16,7 +16,7 @@ import SideBar from './sidebar'
 import { DEFAULT_ADMIN_ROLE } from 'constants'
 import { roleNFTService } from 'services/blockchain/roleNFTService'
 import { useWeb3React } from '@web3-react/core'
-import { toastSuccess, toastError } from 'utils/log'
+import { toastSuccess, toastError, toastBlockchainError } from 'utils/log'
 
 function Admin() {
   const [address, setAddress] = useState('')
@@ -69,7 +69,7 @@ function Admin() {
       fetchAddress()
       toastSuccess(`New address is added successfully`)
     } else {
-      toastError('Error occurs in the BlockChain')
+      toastBlockchainError()
     }
   }
   const handleDelete = async (_address) => {
@@ -82,7 +82,7 @@ function Admin() {
       fetchAddress()
       toastSuccess(`Address is deleted successfully`)
     } else {
-      toastError('Error occurs in the BlockChain')
+      toastBlockchainError()
     }
   }
 

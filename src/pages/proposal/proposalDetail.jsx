@@ -8,7 +8,6 @@ import {
   Badge,
   Link,
   HStack,
-  useToast,
   Spinner,
 } from '@chakra-ui/react'
 import { ArrowBackIcon, AttachmentIcon } from '@chakra-ui/icons'
@@ -22,12 +21,12 @@ import {
   getAllPublicProposal,
 } from 'store/actions/proposalAction'
 import { shortWeb3Acount } from 'utils/utils'
+import { toastSuccess, toastBlockchainError, toastServerError } from 'utils/log'
 
 function ProposalDetail() {
   const { proposalId } = useParams()
   const navigate = useNavigate()
   const { state } = useLocation()
-  const toast = useToast()
   const proposalReducer = useSelector((state) => state.proposalReducer)
   const user = useSelector((state) => state.userReducer)
   const dispatch = useDispatch()
@@ -62,17 +61,9 @@ function ProposalDetail() {
               dispatch(getAllPrivateProposal())
             }
             getVoteHistory()
-            toast({
-              title: `Proposal approved Successfully.`,
-              position: 'top-right',
-              isClosable: true,
-            })
+            toastSuccess(`Proposal approved Successfully.`)
           } else {
-            toast({
-              title: 'Error occurs in the Server',
-              position: 'top-right',
-              isClosable: true,
-            })
+            toastServerError()
           }
         })
 
@@ -80,11 +71,7 @@ function ProposalDetail() {
           console.error(error)
         })
     } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastBlockchainError()
     }
     setIsLoading(false)
   }
@@ -107,28 +94,16 @@ function ProposalDetail() {
               dispatch(getAllPrivateProposal())
             }
             getVoteHistory()
-            toast({
-              title: `Proposal rejected Successfully.`,
-              position: 'top-right',
-              isClosable: true,
-            })
+            toastSuccess(`Proposal rejected Successfully.`)
           } else {
-            toast({
-              title: 'Error occurs in the Server',
-              position: 'top-right',
-              isClosable: true,
-            })
+            toastServerError()
           }
         })
         .catch(function (error) {
           console.error(error)
         })
     } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastBlockchainError()
     }
     setIsLoading(false)
   }

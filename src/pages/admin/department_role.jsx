@@ -9,16 +9,15 @@ import {
   Input,
   IconButton,
   HStack,
-  useToast,
 } from '@chakra-ui/react'
 import { AddIcon, CloseIcon } from '@chakra-ui/icons'
 import { useSelector, useDispatch } from 'react-redux'
 import { getAllDepartment, getAllRole } from 'store/actions/employeeAction'
 import SideBar from './sidebar'
 import { api } from 'services/api/useApi'
+import { toastSuccess, toastError } from 'utils/log'
 
 function DeparmentRole() {
-  const toast = useToast()
   const dispatch = useDispatch()
   const [_department, setDepartment] = useState('')
   const [_role, setRole] = useState('')
@@ -27,11 +26,7 @@ function DeparmentRole() {
 
   const handleDepartmentAdd = async () => {
     if (_department == '') {
-      toast({
-        title: `Please input the department name.`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastError(`Please input the department name.`)
       return
     }
     api
@@ -40,11 +35,7 @@ function DeparmentRole() {
       })
       .then(function (response) {
         if (response.data.id) {
-          toast({
-            title: `New Department added Successfully.`,
-            position: 'top-right',
-            isClosable: true,
-          })
+          toastSuccess(`New Department added Successfully.`)
           dispatch(getAllDepartment())
           setDepartment('')
         }
@@ -59,11 +50,7 @@ function DeparmentRole() {
       .delete(`/department/delete/${item.id}`)
       .then(function (response) {
         if (response.data) {
-          toast({
-            title: `Department deleted Successfully.`,
-            position: 'top-right',
-            isClosable: true,
-          })
+          toastSuccess(`Department deleted Successfully.`)
           dispatch(getAllDepartment())
         }
       })
@@ -74,11 +61,7 @@ function DeparmentRole() {
 
   const handleRoleAdd = async () => {
     if (_role == '') {
-      toast({
-        title: `Please input the role name.`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastError(`Please input the role name.`)
       return
     }
     api
@@ -87,11 +70,7 @@ function DeparmentRole() {
       })
       .then(function (response) {
         if (response.data.id) {
-          toast({
-            title: `New Role added Successfully.`,
-            position: 'top-right',
-            isClosable: true,
-          })
+          toastSuccess(`New Role added Successfully.`)
           dispatch(getAllRole())
           setRole('')
         }
@@ -106,11 +85,7 @@ function DeparmentRole() {
       .delete(`/role/delete/${item.id}`)
       .then(function (response) {
         if (response.data) {
-          toast({
-            title: `Role deleted Successfully.`,
-            position: 'top-right',
-            isClosable: true,
-          })
+          toastSuccess(`Role deleted Successfully.`)
           dispatch(getAllRole())
         }
       })
