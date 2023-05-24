@@ -19,16 +19,21 @@ const employeeReducer = (state = initialState, action) => {
         ...state,
         role: action.data,
       }
+
     case actionTypes.updateAllEmployee:
       return {
         ...state,
         employee: action.data,
       }
-    case actionTypes.createEmployee:
+
+    case actionTypes.createEmployee: {
+      const employee = state.employee
+      employee.push(action.data)
       return {
         ...state,
-        employee: state.employee.push(action.data),
+        employee: employee,
       }
+    }
 
     case actionTypes.updateEmployee: {
       const employee = state.employee.map((item) =>
@@ -39,6 +44,7 @@ const employeeReducer = (state = initialState, action) => {
         employee: employee,
       }
     }
+
     case actionTypes.deleteEmployee: {
       const employee = state.employee.filter((item) => {
         return item.id !== action.data.id

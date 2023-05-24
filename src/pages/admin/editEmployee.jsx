@@ -17,8 +17,10 @@ import {
 } from '@chakra-ui/react'
 import { Formik } from 'formik'
 import { useSelector, useDispatch } from 'react-redux'
-import { updateEmployee } from 'store/actions/employeeAction'
+import { createEmployee, updateEmployee } from 'store/actions/employeeAction'
 import { validateName, validateEthAddr } from 'utils/utils'
+import _ from 'lodash'
+import { toastError } from 'utils/log'
 
 const MainFormLabel = ({ label, upperCase }) => {
   return (
@@ -46,36 +48,49 @@ function EditEmployee({ employee, isOpen, onClose }) {
     initialValues: employee
       ? {
           ...employee,
-          departmentId: employee.departmentId,
-          roleId: employee.roleId,
+          departmentId: employee.departmentId.toString(),
+          roleId: employee.roleId.toString(),
         }
       : {
           name: '',
           departmentId: 0,
-          role: 0,
+          roleId: 0,
           accountAddr: '',
         },
+
     validate: (values) => {
       const errors = {}
       if (validateName(values.name)) errors.name = validateName(values.name)
       if (validateEthAddr(values.accountAddr))
         errors.accountAddr = validateEthAddr(values.accountAddr)
+      if (values.departmentId === 0)
+        errors.departmentId = 'Please select deparment'
+      if (values.roleId === 0) errors.roleId = 'Please select role'
       return errors
     },
-    onSubmit: (values) => {
+
+    onSubmit: (values, { setSubmitting }) => {
       if (values.id) {
-        console.log(values)
-        dispatch(
-          updateEmployee(values.id, {
-            ...values,
-            departmentId: parseInt(values.departmentId),
-            roleId: parseInt(values.roleId),
-          }),
-        )
+        if (_.isEqual(formik.initialValues, values)) {
+          toastError('Nothing to Update.')
+          setSubmitting(false)
+          return
+        } else
+          dispatch(
+            updateEmployee(
+              values.id,
+              {
+                ...values,
+                departmentId: parseInt(values.departmentId),
+                roleId: parseInt(values.roleId),
+              },
+              onClose,
+            ),
+          )
       } else {
-        // dispatch(createEmpl)
+        dispatch(createEmployee(values))
+        onClose()
       }
-      onClose()
     },
   }
 
@@ -106,6 +121,7 @@ function EditEmployee({ employee, isOpen, onClose }) {
               values,
               errors,
               touched,
+              isSubmitting,
               handleChange,
               handleBlur,
               handleSubmit,
@@ -156,6 +172,9 @@ function EditEmployee({ employee, isOpen, onClose }) {
                           </option>
                         ))}
                       </Select>
+                      {errors.departmentId && touched.departmentId && (
+                        <Text color="red.500"> {errors.departmentId}</Text>
+                      )}
                     </FormControl>
 
                     <FormControl isRequired>
@@ -182,6 +201,9 @@ function EditEmployee({ employee, isOpen, onClose }) {
                           </option>
                         ))}
                       </Select>
+                      {errors.roleId && touched.roleId && (
+                        <Text color="red.500"> {errors.roleId}</Text>
+                      )}
                     </FormControl>
 
                     <FormControl isRequired>
@@ -201,15 +223,16 @@ function EditEmployee({ employee, isOpen, onClose }) {
                   </VStack>
                 </ModalBody>
 
-                <ModalFooter>
+                <ModalFooter gap="2">
                   <RoundButton onClick={onClose}>Cancel</RoundButton>
                   <RoundButton
+                    isLoading={isSubmitting}
                     theme="purple"
                     type="submit"
                     ml={3}
                     onClick={() => {}}
                   >
-                    Save
+                    {formik.initialValues.id ? 'Save' : 'Create'}
                   </RoundButton>
                 </ModalFooter>
               </form>
@@ -222,7 +245,7 @@ function EditEmployee({ employee, isOpen, onClose }) {
 }
 
 EditEmployee.propTypes = {
-  employee: PropTypes.object.isRequired,
+  employee: PropTypes.object,
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
 }

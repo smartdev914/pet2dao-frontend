@@ -1,5 +1,4 @@
 import { actionTypes } from './types'
-import { toast } from 'index'
 import { api } from 'services/api/useApi'
 import { toastError, toastSuccess } from 'utils/log'
 
@@ -62,17 +61,17 @@ const createEmployee = (data, navigate = null) => {
               type: actionTypes.createEmployee,
               data: response.data,
             })
-            toastSuccess(toast, `New Employee is Successfully Created.`)
+            toastSuccess(`New Employee is Successfully Created.`)
           }
         } else navigate('/proposal/public')
       })
       .catch(function (error) {
-        toastError(toast, 'Network Error', 'Employee Creation Error:', error)
+        toastError('Network Error', 'Employee Creation Error:', error)
       })
   }
 }
 
-const updateEmployee = (id, data) => {
+const updateEmployee = (id, data, next) => {
   return async (dispatch) => {
     await api
       .put(`/employee/update/${id}`, data)
@@ -86,9 +85,11 @@ const updateEmployee = (id, data) => {
         } else {
           toastError(`You can't update employee.`)
         }
+        next()
       })
       .catch(function (error) {
         toastError('Network Error', 'Employee Update Error:', error)
+        next()
       })
   }
 }

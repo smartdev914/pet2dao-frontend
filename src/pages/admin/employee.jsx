@@ -78,7 +78,7 @@ function Employee() {
       id: 'edit',
       Cell: (item) => {
         return (
-          <Flex justifyContent="center">
+          <Flex justifyContent="center" gap="1">
             <IconButton
               size="sm"
               onClick={() => handleEditEmployee(item.row.original)}
@@ -152,7 +152,6 @@ function Employee() {
 
   const handleEditEmployee = (employee) => {
     setSelectedEmployee(employee)
-    console.log('Selected Employee', selectedEmployee)
     editDisclosure.onOpen()
   }
 
@@ -230,13 +229,14 @@ function Employee() {
               {isDelete ? 'deleted' : 'updated'}.
             </AlertDialogBody>
 
-            <AlertDialogFooter>
+            <AlertDialogFooter gap="2">
               <RoundButton onClick={managerDisclosure.onClose}>
                 Cancel
               </RoundButton>
               <RoundButton
                 onClick={isDelete ? handleDeleteEmployee : handleManagerUpdate}
                 ml={3}
+                theme="purple"
               >
                 {isDelete ? 'Delete' : 'Update'}
               </RoundButton>
