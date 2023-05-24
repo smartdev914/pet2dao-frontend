@@ -48,7 +48,7 @@ function ProposalDetail() {
     console.log(hash)
     if (hash) {
       api
-        .put(`/api/proposal/approve/${id}`, {
+        .put(`/proposal/approve/${id}`, {
           level: parseInt(level),
           employeeId: user.id,
           proposalId: id,

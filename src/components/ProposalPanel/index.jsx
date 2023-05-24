@@ -1,7 +1,5 @@
 // import { useEffect, useState } from 'react'
 import { VStack, Flex, Text, Badge } from '@chakra-ui/react'
-
-// import { RoundButton } from 'components'
 import PropTypes from 'prop-types'
 
 function ProposalPanel({ proposal, onClick, index }) {

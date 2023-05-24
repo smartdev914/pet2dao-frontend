@@ -1,8 +1,12 @@
 import { DEFAULT_ADMIN_ROLE } from 'constants'
 import { roleNFTService } from 'services/blockchain/roleNFTService'
-import { daoService } from 'services/blockchain/DAOService'
-import { toastSuccess, toastServerError } from 'utils/log'
-// import { validateEthAddr } from 'utils/utils'
+import {
+  toastError,
+  toastSuccess,
+  toastServerError,
+  toastBlockchainError,
+} from 'utils/log'
+import { validateEthAddr } from 'utils/utils'
 import { api } from './useApi'
 
 // ////////////////// ADMIN ////////////////////
@@ -36,6 +40,43 @@ const fetchAddr = async () => {
   console.log('Fetched Addresses', _addresses)
 
   return _addresses
+}
+
+const handleAddAdmin = async ({ account, address, successCallback }) => {
+  if (address === '') {
+    toastError(`Please input the account address.`)
+    return
+  } else {
+    const validation = validateEthAddr(address)
+    if (validation !== null) {
+      toastError(validation)
+      return
+    }
+  }
+
+  const hash = await roleNFTService.addAdmin(account, address)
+  if (hash) {
+    successCallback()
+    // fetchAddress()
+    toastSuccess(`New address is added successfully`)
+  } else {
+    toastBlockchainError()
+  }
+}
+
+const handleDeleteAdmin = async ({ account, _address, successCallback }) => {
+  const hash = await roleNFTService.revokeRole(
+    account,
+    DEFAULT_ADMIN_ROLE,
+    _address,
+  )
+  if (hash) {
+    successCallback()
+    // fetchAddress()
+    toastSuccess(`Address is deleted successfully`)
+  } else {
+    toastBlockchainError()
+  }
 }
 
 // ///// NFT /////////
@@ -82,64 +123,12 @@ const fetchNFTByID = async (ID) => {
   })
 }
 
-// ////////////////////////// Permission //////////////////////
-const fetchPermissionByKeccak256 = async (_keccak256) => {
-  return new Promise((resolve, reject) => {
-    ;(async () => {
-      try {
-        const _permission = await api.get(
-          `/permission/findOneByKeccak256/${_keccak256}`,
-        )
-        resolve(_permission.data)
-      } catch (e) {
-        reject()
-      }
-    })()
-  })
-}
-
-const getAllPermissions = async () => {
-  const hash0 = await daoService.getPermissionsOfLevel(0)
-  const promises0 = []
-  for (let i = 0; i < hash0.length; i++) {
-    promises0.push(fetchPermissionByKeccak256(hash0[i]))
-  }
-  const permission0 = await Promise.all(promises0)
-
-  const hash1 = await daoService.getPermissionsOfLevel(1)
-  const promises1 = []
-  for (let i = 0; i < hash1.length; i++) {
-    promises1.push(fetchPermissionByKeccak256(hash1[i]))
-  }
-  const permission1 = await Promise.all(promises1)
-
-  const hash2 = await daoService.getPermissionsOfLevel(2)
-  const promises2 = []
-  for (let i = 0; i < hash2.length; i++) {
-    promises2.push(fetchPermissionByKeccak256(hash2[i]))
-  }
-  const permission2 = await Promise.all(promises2)
-
-  const hash3 = await daoService.getPermissionsOfLevel(3)
-  const promises3 = []
-  for (let i = 0; i < hash3.length; i++) {
-    promises3.push(fetchPermissionByKeccak256(hash3[i]))
-  }
-  const permission3 = await Promise.all(promises3)
-  return {
-    level0: permission0,
-    level1: permission1,
-    level2: permission2,
-    level3: permission3,
-  }
-}
-
 export {
   fetchAddr,
   fetchAddressByID,
   updateDBNFT,
   findOneByAccountAddr,
   fetchNFTByID,
-  fetchPermissionByKeccak256,
-  getAllPermissions,
+  handleAddAdmin,
+  handleDeleteAdmin,
 }

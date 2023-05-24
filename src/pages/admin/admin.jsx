@@ -13,12 +13,12 @@ import {
 } from '@chakra-ui/react'
 import { AddIcon, CloseIcon } from '@chakra-ui/icons'
 import SideBar from './sidebar'
-import { DEFAULT_ADMIN_ROLE } from 'constants'
-import { roleNFTService } from 'services/blockchain/roleNFTService'
 import { useWeb3React } from '@web3-react/core'
-import { toastSuccess, toastError, toastBlockchainError } from 'utils/log'
-import { validateEthAddr } from 'utils/utils'
-import { fetchAddr } from 'services/api/adminApi'
+import {
+  fetchAddr,
+  handleAddAdmin,
+  handleDeleteAdmin,
+} from 'services/api/adminApi'
 
 function Admin() {
   const [address, setAddress] = useState('')
@@ -33,39 +33,10 @@ function Admin() {
     setIsLoading(false)
   }
 
-  const handleAdd = async () => {
-    if (address === '') {
-      toastError(`Please input the account address.`)
-      return
-    } else {
-      const validation = validateEthAddr(address)
-      if (validation !== null) {
-        toastError(validation)
-        return
-      }
-    }
+  const handleAdd = () => handleAddAdmin(account, address, fetchAddress)
 
-    const hash = await roleNFTService.addAdmin(account, address)
-    if (hash) {
-      fetchAddress()
-      toastSuccess(`New address is added successfully`)
-    } else {
-      toastBlockchainError()
-    }
-  }
-  const handleDelete = async (_address) => {
-    const hash = await roleNFTService.revokeRole(
-      account,
-      DEFAULT_ADMIN_ROLE,
-      _address,
-    )
-    if (hash) {
-      fetchAddress()
-      toastSuccess(`Address is deleted successfully`)
-    } else {
-      toastBlockchainError()
-    }
-  }
+  const handleDelete = (_address) =>
+    handleDeleteAdmin(account, _address, fetchAddress)
 
   useEffect(() => {
     fetchAddress()

@@ -51,18 +51,20 @@ const getAllEmployee = () => {
   }
 }
 
-const createEmployee = (data) => {
+const createEmployee = (data, navigate = null) => {
   return async (dispatch) => {
     await api
       .post('/employee/create', data)
       .then(function (response) {
         if (response.data.id) {
-          dispatch({
-            type: actionTypes.createEmployee,
-            data: response.data,
-          })
-          toastSuccess(toast, `New Employee is Successfully Created.`)
-        }
+          if (navigate == null) {
+            dispatch({
+              type: actionTypes.createEmployee,
+              data: response.data,
+            })
+            toastSuccess(toast, `New Employee is Successfully Created.`)
+          }
+        } else navigate('/proposal/public')
       })
       .catch(function (error) {
         toastError(toast, 'Network Error', 'Employee Creation Error:', error)

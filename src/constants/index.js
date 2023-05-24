@@ -23,6 +23,7 @@ const HeaderItems = [
       { text: 'NFT', path: '/admin/nft' },
       { text: 'Permission', path: '/admin/permission' },
       { text: 'Department & Role', path: '/admin/depart_role' },
+      { text: 'Administrator', path: '/admin/admin' },
     ],
   },
 ]

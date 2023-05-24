@@ -10,14 +10,26 @@ const toastError = (title, errorType = '', error = '') => {
   if (errorType !== '') console.error(`${errorType}:`, error)
 }
 
-const toastServerError = () => {}
+const toastServerError = () =>
+  toast({
+    title: `Error in Server.`,
+    status: 'warning',
+    position: 'top-right',
+    isClosable: true,
+  })
 
-const toastBlockchainError = () => {}
+const toastBlockchainError = () =>
+  toast({
+    title: `Error in Blockchain`,
+    status: 'warning',
+    position: 'top-right',
+    isClosable: true,
+  })
 
 const toastSuccess = (title) => {
   toast({
     title: `${title}`,
-    status: 'warning',
+    status: 'success',
     position: 'top-right',
     isClosable: true,
   })

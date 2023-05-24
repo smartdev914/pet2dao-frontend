@@ -9,15 +9,15 @@ import {
   Tab,
   TabPanels,
 } from '@chakra-ui/react'
-import { keccak256 } from '@ethersproject/keccak256'
-import { toUtf8Bytes } from '@ethersproject/strings'
+
 import { useWeb3React } from '@web3-react/core'
 import SideBar from './sidebar'
-import { daoService } from 'services/blockchain/DAOService'
-import { api } from 'services/api/useApi'
 import PermissionTabPanel from 'components/PermissionTabPanel'
-import { toastSuccess, toastBlockchainError } from 'utils/log'
-import { getAllPermissions } from 'services/api/adminApi'
+import {
+  getAllPermissions,
+  handlePermissionAdd,
+  handlePermissionDelete,
+} from 'services/api/permissionApi'
 
 function Permission() {
   const [isLoading, setIsLoading] = useState(false)
@@ -30,7 +30,7 @@ function Permission() {
 
   const setAllPermissions = async () => {
     setIsLoading(true)
-    setPermissions(getAllPermissions())
+    setPermissions(await getAllPermissions())
     setIsLoading(false)
   }
 
@@ -42,65 +42,23 @@ function Permission() {
     setCurrentRole(e.target.value)
   }
 
-  const addPermissiontoDB = async (_keccak256, _department, _role, _level) => {
-    api
-      .post('/permission/create', {
-        keccak256: _keccak256,
-        department: _department,
-        role: _role,
-        level: _level,
-      })
-      .then(function (response) {
-        if (response.status === 200) {
-          toastSuccess(`New permission added successfully.`)
-        }
-      })
-      .catch(function (error) {
-        console.error(error)
-      })
-  }
-
-  const handlePermissionAdd = async () => {
-    if (currentDepartment == '' || currentRole === '') {
-      toastSuccess(`Please select the department and role.`)
-      return
-    }
-
-    const hash = await daoService.addPermission(
+  const permissionAdd = () =>
+    handlePermissionAdd({
       account,
       currentLevel,
-      `${currentDepartment}_${currentRole}`,
-    )
-    if (hash) {
-      await addPermissiontoDB(
-        keccak256(toUtf8Bytes(`${currentDepartment}_${currentRole}`)),
-        currentDepartment,
-        currentRole,
-        currentLevel,
-      )
-      setAllPermissions()
-    } else {
-      toastBlockchainError()
-    }
-  }
+      currentDepartment,
+      currentRole,
+      successCallback: setAllPermissions,
+    })
 
-  const handlePermissionDelete = async (index, id) => {
-    const hash = await daoService.deletePermission(account, currentLevel, index)
-    if (hash) {
-      api
-        .delete(`/permission/delete/${id}`)
-        .then(function (response) {
-          if (response.data) {
-            setAllPermissions()
-            toastSuccess(`Permission deleted Successfully.`)
-          }
-        })
-        .catch(function (error) {
-          console.error(error)
-        })
-    } else {
-      toastBlockchainError()
-    }
+  const permissionDelete = (index, id) => {
+    handlePermissionDelete({
+      account,
+      currentLevel,
+      index,
+      id,
+      setAllPermissions,
+    })
   }
 
   useEffect(() => {
@@ -204,9 +162,9 @@ function Permission() {
                 handleDepartmentChange={handleDepartmentChange}
                 currentRole={currentRole}
                 handleRoleChange={handleRoleChange}
-                handlePermissionAdd={handlePermissionAdd}
+                handlePermissionAdd={permissionAdd}
                 permissions={permissions.level0}
-                handlePermissionDelete={handlePermissionDelete}
+                handlePermissionDelete={permissionDelete}
               />
               <PermissionTabPanel
                 isLoading={isLoading}
@@ -214,9 +172,9 @@ function Permission() {
                 handleDepartmentChange={handleDepartmentChange}
                 currentRole={currentRole}
                 handleRoleChange={handleRoleChange}
-                handlePermissionAdd={handlePermissionAdd}
+                handlePermissionAdd={permissionAdd}
                 permissions={permissions.level1}
-                handlePermissionDelete={handlePermissionDelete}
+                handlePermissionDelete={permissionDelete}
               />
               <PermissionTabPanel
                 isLoading={isLoading}
@@ -224,9 +182,9 @@ function Permission() {
                 handleDepartmentChange={handleDepartmentChange}
                 currentRole={currentRole}
                 handleRoleChange={handleRoleChange}
-                handlePermissionAdd={handlePermissionAdd}
+                handlePermissionAdd={permissionAdd}
                 permissions={permissions.level2}
-                handlePermissionDelete={handlePermissionDelete}
+                handlePermissionDelete={permissionDelete}
               />
               <PermissionTabPanel
                 isLoading={isLoading}
@@ -234,9 +192,9 @@ function Permission() {
                 handleDepartmentChange={handleDepartmentChange}
                 currentRole={currentRole}
                 handleRoleChange={handleRoleChange}
-                handlePermissionAdd={handlePermissionAdd}
+                handlePermissionAdd={permissionAdd}
                 permissions={permissions.level3}
-                handlePermissionDelete={handlePermissionDelete}
+                handlePermissionDelete={permissionDelete}
               />
             </TabPanels>
           </Tabs>

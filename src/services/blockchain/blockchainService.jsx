@@ -31,7 +31,7 @@ class BlockchainService {
       })
       return await this.checkTx(txHash)
     } catch (error) {
-      alert('There was an error in sending transaction. Please try again.')
+      // alert('There was an error in sending transaction. Please try again.')
       console.log(error)
       return null
     }

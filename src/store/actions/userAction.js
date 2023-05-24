@@ -14,7 +14,7 @@ const signIn = (account, navigate) => {
           try {
             const { department, role } = payload
             const _permission = await api.get(
-              `/api/permission/findAllByKeccak256/${keccak256(
+              `/permission/findAllByKeccak256/${keccak256(
                 toUtf8Bytes(`${department}_${role}`),
               )}`,
             )

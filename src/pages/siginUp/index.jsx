@@ -16,10 +16,10 @@ import { useWeb3React } from '@web3-react/core'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useFormik } from 'formik'
-import { api } from 'services/api/useApi'
-import { toastSuccess, toastError } from 'utils/log'
+import { toastError } from 'utils/log'
 
 import Logo from 'assets/LOGO.png'
+import { createEmployee } from 'store/actions/employeeAction'
 
 export default function Signup() {
   const { account } = useWeb3React()
@@ -56,17 +56,7 @@ export default function Signup() {
         isManager: false,
       }
 
-      api
-        .post('/employee/create', newEmployee)
-        .then(function (response) {
-          if (response.data.id) {
-            toastSuccess(`Please wait until approved.`)
-            navigate('/proposal/public')
-          }
-        })
-        .catch(function (error) {
-          toastError('Sign Up Error', 'Sign Up Error', error)
-        })
+      createEmployee(newEmployee, navigate)
     },
   })
 

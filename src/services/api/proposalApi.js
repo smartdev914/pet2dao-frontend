@@ -1,7 +1,7 @@
 import { api } from './useApi'
 const encrypt = async (text) => {
   try {
-    const response = await api.post('/api/proposal/encrypt', {
+    const response = await api.post('/proposal/encrypt', {
       text: text,
     })
     return response.data.text
