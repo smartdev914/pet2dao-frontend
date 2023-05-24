@@ -34,12 +34,7 @@ const getAllPermissions = async () => {
   for (let i = 0; i < 4; i++) {
     permissions.push(await getPermission(i))
   }
-  return {
-    level0: permissions[0],
-    level1: permissions[1],
-    level2: permissions[2],
-    level3: permissions[3],
-  }
+  return permissions
 }
 
 const addPermissiontoDB = async (_keccak256, _department, _role, _level) => {

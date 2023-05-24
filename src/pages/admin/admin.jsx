@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Layout } from 'components'
 import {
   Flex,
@@ -33,11 +33,15 @@ function Admin() {
     setIsLoading(false)
   }
 
-  const handleAdd = () => handleAddAdmin(account, address, fetchAddress)
+  const handleAdd = useCallback(
+    () => handleAddAdmin({ account, address, fetchAddress }),
+    [account, address],
+  )
 
-  const handleDelete = (_address) =>
-    handleDeleteAdmin(account, _address, fetchAddress)
-
+  const handleDelete = useCallback(
+    (_address) => handleDeleteAdmin({ account, _address, fetchAddress }),
+    [account],
+  )
   useEffect(() => {
     fetchAddress()
   }, [])

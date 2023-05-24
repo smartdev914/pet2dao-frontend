@@ -37,7 +37,10 @@ function DeparmentRole() {
 
   const departmentDelete = (item) => handleDepartmentDelete(item, dispatch)
 
-  const roleAdd = () => handleRoleAdd(_role, dispatch, () => setRole(''))
+  const roleAdd = useCallback(
+    () => handleRoleAdd(_role, dispatch, () => setRole('')),
+    [_role],
+  )
 
   const roleDelete = (item) => handleRoleDelete(item, dispatch)
 

@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { Layout } from 'components'
+import PropTypes from 'prop-types'
 import {
   Flex,
   Text,
@@ -19,20 +20,42 @@ import {
   handlePermissionDelete,
 } from 'services/api/permissionApi'
 
+const PermissionTab = ({ title }) => {
+  return (
+    <Tab
+      borderBottom="1px"
+      borderColor="secondaryBorderColor"
+      fontFamily="Robot"
+      fontSize={{ base: '16px', md: '20px' }}
+      _selected={{
+        border: '1px',
+        borderColor: 'secondaryBorderColor',
+        borderTopLeftRadius: '5px',
+        borderTopRightRadius: '5px',
+        borderBottomStyle: 'none',
+      }}
+    >
+      {title}
+    </Tab>
+  )
+}
+
+PermissionTab.propTypes = { title: PropTypes.string.isRequired }
+
 function Permission() {
   const [isLoading, setIsLoading] = useState(false)
-  const [permissions, setPermissions] = useState({})
+  const [permissions, setPermissions] = useState([[], [], [], []])
   const [currentDepartment, setCurrentDepartment] = useState('')
   const [currentRole, setCurrentRole] = useState('')
   const [currentLevel, setCurrentLevel] = useState(0)
 
   const { account } = useWeb3React()
 
-  const setAllPermissions = async () => {
+  const setAllPermissions = useCallback(async () => {
     setIsLoading(true)
     setPermissions(await getAllPermissions())
     setIsLoading(false)
-  }
+  }, [])
 
   const handleDepartmentChange = (e) => {
     setCurrentDepartment(e.target.value)
@@ -42,24 +65,30 @@ function Permission() {
     setCurrentRole(e.target.value)
   }
 
-  const permissionAdd = () =>
-    handlePermissionAdd({
-      account,
-      currentLevel,
-      currentDepartment,
-      currentRole,
-      successCallback: setAllPermissions,
-    })
+  const permissionAdd = useCallback(
+    () =>
+      handlePermissionAdd({
+        account,
+        currentLevel,
+        currentDepartment,
+        currentRole,
+        successCallback: setAllPermissions,
+      }),
+    [account, currentLevel, currentDepartment, currentRole],
+  )
 
-  const permissionDelete = (index, id) => {
-    handlePermissionDelete({
-      account,
-      currentLevel,
-      index,
-      id,
-      setAllPermissions,
-    })
-  }
+  const permissionDelete = useCallback(
+    (index, id) => {
+      handlePermissionDelete({
+        account,
+        currentLevel,
+        index,
+        id,
+        setAllPermissions,
+      })
+    },
+    [account, currentLevel],
+  )
 
   useEffect(() => {
     setAllPermissions()
@@ -90,112 +119,28 @@ function Permission() {
             color="whiteAlpha.900"
           >
             <TabList>
-              <Tab
-                borderBottom="1px"
-                borderColor="secondaryBorderColor"
-                fontFamily="Robot"
-                fontSize={{ base: '16px', md: '20px' }}
-                _selected={{
-                  border: '1px',
-                  borderColor: 'secondaryBorderColor',
-                  borderTopLeftRadius: '5px',
-                  borderTopRightRadius: '5px',
-                  borderBottomStyle: 'none',
-                }}
-              >
-                Level 1
-              </Tab>
-              <Tab
-                borderBottom="1px"
-                borderColor="secondaryBorderColor"
-                fontFamily="Robot"
-                fontSize={{ base: '16px', md: '20px' }}
-                _selected={{
-                  border: '1px',
-                  borderColor: 'secondaryBorderColor',
-                  borderTopLeftRadius: '5px',
-                  borderTopRightRadius: '5px',
-                  borderBottomStyle: 'none',
-                }}
-              >
-                Level 2
-              </Tab>
-              <Tab
-                borderBottom="1px"
-                borderColor="secondaryBorderColor"
-                fontFamily="Robot"
-                fontSize={{ base: '16px', md: '20px' }}
-                _selected={{
-                  border: '1px',
-                  borderColor: 'secondaryBorderColor',
-                  borderTopLeftRadius: '5px',
-                  borderTopRightRadius: '5px',
-                  borderBottomStyle: 'none',
-                }}
-              >
-                Level 3
-              </Tab>
-              <Tab
-                borderBottom="1px"
-                borderColor="secondaryBorderColor"
-                fontFamily="Robot"
-                fontSize={{ base: '16px', md: '20px' }}
-                _selected={{
-                  border: '1px',
-                  borderColor: 'secondaryBorderColor',
-                  borderTopLeftRadius: '5px',
-                  borderTopRightRadius: '5px',
-                  borderBottomStyle: 'none',
-                }}
-              >
-                Level 4
-              </Tab>
+              {Array.from({ length: 4 }, (_, i) => i + 1).map((i) => (
+                <PermissionTab key={i} title={`Level ${i}`} />
+              ))}
             </TabList>
             <TabPanels
               border="1px"
               borderColor="secondaryBorderColor"
               borderTop="none"
             >
-              <PermissionTabPanel
-                isLoading={isLoading}
-                currentDepartment={currentDepartment}
-                handleDepartmentChange={handleDepartmentChange}
-                currentRole={currentRole}
-                handleRoleChange={handleRoleChange}
-                handlePermissionAdd={permissionAdd}
-                permissions={permissions.level0}
-                handlePermissionDelete={permissionDelete}
-              />
-              <PermissionTabPanel
-                isLoading={isLoading}
-                currentDepartment={currentDepartment}
-                handleDepartmentChange={handleDepartmentChange}
-                currentRole={currentRole}
-                handleRoleChange={handleRoleChange}
-                handlePermissionAdd={permissionAdd}
-                permissions={permissions.level1}
-                handlePermissionDelete={permissionDelete}
-              />
-              <PermissionTabPanel
-                isLoading={isLoading}
-                currentDepartment={currentDepartment}
-                handleDepartmentChange={handleDepartmentChange}
-                currentRole={currentRole}
-                handleRoleChange={handleRoleChange}
-                handlePermissionAdd={permissionAdd}
-                permissions={permissions.level2}
-                handlePermissionDelete={permissionDelete}
-              />
-              <PermissionTabPanel
-                isLoading={isLoading}
-                currentDepartment={currentDepartment}
-                handleDepartmentChange={handleDepartmentChange}
-                currentRole={currentRole}
-                handleRoleChange={handleRoleChange}
-                handlePermissionAdd={permissionAdd}
-                permissions={permissions.level3}
-                handlePermissionDelete={permissionDelete}
-              />
+              {permissions.map((permission, index) => (
+                <PermissionTabPanel
+                  key={index}
+                  isLoading={isLoading}
+                  currentDepartment={currentDepartment}
+                  handleDepartmentChange={handleDepartmentChange}
+                  currentRole={currentRole}
+                  handleRoleChange={handleRoleChange}
+                  handlePermissionAdd={permissionAdd}
+                  permissions={permission}
+                  handlePermissionDelete={permissionDelete}
+                />
+              ))}
             </TabPanels>
           </Tabs>
         </VStack>
