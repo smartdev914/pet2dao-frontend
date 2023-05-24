@@ -23,7 +23,7 @@ export const _uploadPinata = async (file) => {
     const ImgHash = config.baseUrl + response.data.IpfsHash
     return ImgHash
   } catch (e) {
-    console.log(e)
+    console.log('Pinata Upload Error:', e)
     return
   }
 }
@@ -172,6 +172,6 @@ export const fetchFromIPFS = async (hash) => {
       return data
     }
   } catch (e) {
-    console.log(e)
+    console.log('Fetch IPFS Error:', e)
   }
 }

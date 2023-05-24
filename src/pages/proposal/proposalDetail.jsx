@@ -8,7 +8,6 @@ import {
   Badge,
   Link,
   HStack,
-  useToast,
   Spinner,
 } from '@chakra-ui/react'
 import { ArrowBackIcon, AttachmentIcon } from '@chakra-ui/icons'
@@ -16,18 +15,18 @@ import { useParams, useNavigate, useLocation } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 import { useWeb3React } from '@web3-react/core'
 import { daoService } from 'services/blockchain/DAOService'
-import { client } from 'services/api/useApi'
+import { api } from 'services/api/useApi'
 import {
   getAllPrivateProposal,
   getAllPublicProposal,
 } from 'store/actions/proposalAction'
 import { shortWeb3Acount } from 'utils/utils'
+import { toastSuccess, toastBlockchainError, toastServerError } from 'utils/log'
 
 function ProposalDetail() {
   const { proposalId } = useParams()
   const navigate = useNavigate()
   const { state } = useLocation()
-  const toast = useToast()
   const proposalReducer = useSelector((state) => state.proposalReducer)
   const user = useSelector((state) => state.userReducer)
   const dispatch = useDispatch()
@@ -48,15 +47,12 @@ function ProposalDetail() {
     const hash = await daoService.approveProposal(account, id - 1)
     console.log(hash)
     if (hash) {
-      const token = JSON.parse(localStorage.getItem('token'))
-      const customOption = {
-        headers: {
-          Authorization: token,
-        },
-        data: { level: parseInt(level), employeeId: user.id, proposalId: id },
-      }
-
-      client(`/api/proposal/approve/${id}`, 'PUT', customOption)
+      api
+        .put(`/proposal/approve/${id}`, {
+          level: parseInt(level),
+          employeeId: user.id,
+          proposalId: id,
+        })
         .then(function (response) {
           if (response.status === 200) {
             if (state === 'public') {
@@ -65,17 +61,9 @@ function ProposalDetail() {
               dispatch(getAllPrivateProposal())
             }
             getVoteHistory()
-            toast({
-              title: `Proposal approved Successfully.`,
-              position: 'top-right',
-              isClosable: true,
-            })
+            toastSuccess(`Proposal approved Successfully.`)
           } else {
-            toast({
-              title: 'Error occurs in the Server',
-              position: 'top-right',
-              isClosable: true,
-            })
+            toastServerError()
           }
         })
 
@@ -83,11 +71,7 @@ function ProposalDetail() {
           console.error(error)
         })
     } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastBlockchainError()
     }
     setIsLoading(false)
   }
@@ -96,15 +80,12 @@ function ProposalDetail() {
     setIsLoading(true)
     const hash = await daoService.rejectProposal(account, id - 1)
     if (hash) {
-      const token = JSON.parse(localStorage.getItem('token'))
-      const customOption = {
-        headers: {
-          Authorization: token,
-        },
-        data: { level: parseInt(level), employeeId: user.id, proposalId: id },
-      }
-
-      client(`/api/proposal/reject/${id}`, 'PUT', customOption)
+      api
+        .put(`/proposal/reject/${id}`, {
+          level: parseInt(level),
+          employeeId: user.id,
+          proposalId: id,
+        })
         .then(function (response) {
           if (response.status === 200) {
             if (state === 'public') {
@@ -113,34 +94,23 @@ function ProposalDetail() {
               dispatch(getAllPrivateProposal())
             }
             getVoteHistory()
-            toast({
-              title: `Proposal rejected Successfully.`,
-              position: 'top-right',
-              isClosable: true,
-            })
+            toastSuccess(`Proposal rejected Successfully.`)
           } else {
-            toast({
-              title: 'Error occurs in the Server',
-              position: 'top-right',
-              isClosable: true,
-            })
+            toastServerError()
           }
         })
         .catch(function (error) {
           console.error(error)
         })
     } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastBlockchainError()
     }
     setIsLoading(false)
   }
 
   const getVoteHistory = async () => {
-    client(`/api/vote/findAllByProposal/${id}`, 'GET')
+    api
+      .get(`/vote/findAllByProposal/${id}`)
       .then(function (response) {
         setVoteHistory(response.data)
       })

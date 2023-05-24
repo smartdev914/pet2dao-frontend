@@ -11,67 +11,30 @@ import {
   TabPanel,
   SimpleGrid,
   Spinner,
-  useToast,
 } from '@chakra-ui/react'
 import { useWeb3React } from '@web3-react/core'
 import SideBar from './sidebar'
-import { client } from 'services/api/useApi'
+import { api } from 'services/api/useApi'
 import { roleNFTService } from 'services/blockchain/roleNFTService'
-import { findOneByAccountAddr } from 'store/actions/employeeAction'
+import { toastSuccess, toastError, toastBlockchainError } from 'utils/log'
+import { updateDBNFT, fetchNFTByID } from 'services/api/adminApi'
 
 function NFT() {
   const [pendingNFT, setPendingNFT] = useState([])
   const [approvedNFT, setApprovedNFT] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const { account } = useWeb3React()
-  const toast = useToast()
 
   const fetchPendingNFT = async () => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-    }
-
-    client('/api/nft/findAll', 'GET', customOption)
+    api
+      .get('/nft/findAll')
       .then(function (response) {
         if (response.status === 200) {
           setPendingNFT(response.data)
         }
       })
       .catch(function (error) {
-        console.error(error)
-      })
-  }
-
-  const updateDBNFT = async (id, customData) => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-      data: { ...customData },
-    }
-
-    client(`/api/nft/update/${id}`, 'PUT', customOption)
-      .then(function (response) {
-        if (response.status === 200) {
-          toast({
-            title: `NFT minted Successfully.`,
-            position: 'top-right',
-            isClosable: true,
-          })
-        } else {
-          toast({
-            title: 'Error occurs in the Server',
-            position: 'top-right',
-            isClosable: true,
-          })
-        }
-      })
-      .catch(function (error) {
-        console.error(error)
+        console.error('Fetch Pending NFT Error:', error)
       })
   }
 
@@ -89,22 +52,14 @@ function NFT() {
       fetchPendingNFT()
       fetchMintedNFT()
     } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastBlockchainError()
     }
     setIsLoading(false)
   }
 
   const handleBurn = async (tokenId) => {
     if (!tokenId || tokenId < 1) {
-      toast({
-        title: 'Invalid TokenId',
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastError('Invalid Token Id')
       return
     }
 
@@ -112,41 +67,12 @@ function NFT() {
     const hash = await roleNFTService.burnNFT(account, tokenId)
     if (hash) {
       await fetchMintedNFT()
-      toast({
-        title: `NFT is burnt successfully`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      toastSuccess(`NFT is successfully burnt.`)
     } else {
-      console.log(hash)
-      toast({
-        title: `Error occurs in the BlockChain`,
-        position: 'top-right',
-        isClosable: true,
-      })
+      console.log('Hash', hash)
+      toastBlockchainError()
     }
     setIsLoading(false)
-  }
-
-  const fetchNFTByID = async (ID) => {
-    return new Promise((resolve, reject) => {
-      ;(async () => {
-        try {
-          const tokenURI = await roleNFTService.tokenURI(ID)
-          const hash = tokenURI.split('/')[tokenURI.split('/').length - 1]
-          const accountAddr = await roleNFTService.ownerOf(ID)
-          const employee = await findOneByAccountAddr(accountAddr)
-          const _nft = {
-            metaDataURI: hash,
-            employee: employee,
-            id: ID,
-          }
-          resolve(_nft)
-        } catch (e) {
-          reject()
-        }
-      })()
-    })
   }
 
   const fetchMintedNFT = async () => {

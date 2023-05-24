@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Layout } from 'components'
 import {
   Flex,
@@ -9,138 +9,40 @@ import {
   Input,
   IconButton,
   HStack,
-  useToast,
 } from '@chakra-ui/react'
 import { AddIcon, CloseIcon } from '@chakra-ui/icons'
 import { useSelector, useDispatch } from 'react-redux'
-import { getAllDepartment, getAllRole } from 'store/actions/employeeAction'
 import SideBar from './sidebar'
-import { client } from 'services/api/useApi'
+import {
+  handleDepartmentAdd,
+  handleDepartmentDelete,
+  handleRoleAdd,
+  handleRoleDelete,
+} from 'services/api/departmentApi'
 
 function DeparmentRole() {
-  const toast = useToast()
   const dispatch = useDispatch()
   const [_department, setDepartment] = useState('')
   const [_role, setRole] = useState('')
   const employeeReducer = useSelector((state) => state.employeeReducer)
   const { department, role } = employeeReducer
 
-  const handleDepartmentAdd = async () => {
-    if (_department == '') {
-      toast({
-        title: `Please input the department name.`,
-        position: 'top-right',
-        isClosable: true,
-      })
-      return
-    }
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-      data: {
-        name: _department,
-      },
-    }
+  const departmentAdd = useCallback(
+    () =>
+      handleDepartmentAdd(_department, dispatch, () => {
+        setDepartment('')
+      }),
+    [_department],
+  )
 
-    client('/api/department/create', 'POST', customOption)
-      .then(function (response) {
-        if (response.data.id) {
-          toast({
-            title: `New Department added Successfully.`,
-            position: 'top-right',
-            isClosable: true,
-          })
-          dispatch(getAllDepartment())
-          setDepartment('')
-        }
-      })
-      .catch(function (error) {
-        console.error(error)
-      })
-  }
+  const departmentDelete = (item) => handleDepartmentDelete(item, dispatch)
 
-  const handleDepartmentDelete = (item) => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-    }
-    client(`/api/department/delete/${item.id}`, 'DELETE', customOption)
-      .then(function (response) {
-        if (response.data) {
-          toast({
-            title: `Department deleted Successfully.`,
-            position: 'top-right',
-            isClosable: true,
-          })
-          dispatch(getAllDepartment())
-        }
-      })
-      .catch(function (error) {
-        console.error(error)
-      })
-  }
+  const roleAdd = useCallback(
+    () => handleRoleAdd(_role, dispatch, () => setRole('')),
+    [_role],
+  )
 
-  const handleRoleAdd = async () => {
-    if (_role == '') {
-      toast({
-        title: `Please input the role name.`,
-        position: 'top-right',
-        isClosable: true,
-      })
-      return
-    }
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-      data: {
-        name: _role,
-      },
-    }
-    client('/api/role/create', 'POST', customOption)
-      .then(function (response) {
-        if (response.data.id) {
-          toast({
-            title: `New Role added Successfully.`,
-            position: 'top-right',
-            isClosable: true,
-          })
-          dispatch(getAllRole())
-          setRole('')
-        }
-      })
-      .catch(function (error) {
-        console.error(error)
-      })
-  }
-
-  const handleRoleDelete = (item) => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-    }
-    client(`/api/role/delete/${item.id}`, 'DELETE', customOption)
-      .then(function (response) {
-        if (response.data) {
-          toast({
-            title: `Role deleted Successfully.`,
-            position: 'top-right',
-            isClosable: true,
-          })
-          dispatch(getAllRole())
-        }
-      })
-      .catch(function (error) {
-        console.error(error)
-      })
-  }
+  const roleDelete = (item) => handleRoleDelete(item, dispatch)
 
   return (
     <Layout activeId="manager">
@@ -189,7 +91,7 @@ function DeparmentRole() {
                     color: 'primaryBlack',
                   }}
                   icon={<AddIcon />}
-                  onClick={handleDepartmentAdd}
+                  onClick={departmentAdd}
                 />
               </HStack>
               <VStack
@@ -233,7 +135,7 @@ function DeparmentRole() {
                           color: 'primaryBlack',
                         }}
                         icon={<CloseIcon />}
-                        onClick={() => handleDepartmentDelete(item)}
+                        onClick={() => departmentDelete(item)}
                       />
                     </Flex>
                   ))
@@ -265,7 +167,7 @@ function DeparmentRole() {
                     color: 'primaryBlack',
                   }}
                   icon={<AddIcon />}
-                  onClick={handleRoleAdd}
+                  onClick={roleAdd}
                 />
               </HStack>
               <VStack
@@ -308,7 +210,7 @@ function DeparmentRole() {
                           color: 'primaryBlack',
                         }}
                         icon={<CloseIcon />}
-                        onClick={() => handleRoleDelete(item)}
+                        onClick={() => roleDelete(item)}
                       />
                     </Flex>
                   ))

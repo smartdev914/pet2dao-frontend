@@ -4,7 +4,7 @@ import reportWebVitals from './reportWebVitals'
 import { Web3ReactProvider } from '@web3-react/core'
 import { Web3Provider } from '@ethersproject/providers'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { ChakraProvider } from '@chakra-ui/react'
+import { ChakraProvider, createStandaloneToast } from '@chakra-ui/react'
 import { Provider } from 'react-redux'
 import './index.css'
 
@@ -39,6 +39,8 @@ function getLibrary(provider) {
   return library
 }
 
+const { toast, ToastContainer } = createStandaloneToast()
+export { toast }
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
@@ -46,6 +48,7 @@ root.render(
       <ChakraProvider theme={theme}>
         <Provider store={store}>
           <BrowserRouter>
+            <ToastContainer />
             <Routes>
               <Route path="/" element={<DashBoard />} />
               <Route path="/signup" element={<Signup />} />

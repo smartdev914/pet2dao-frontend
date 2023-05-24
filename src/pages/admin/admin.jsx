@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { Layout } from 'components'
 import {
   Flex,
@@ -10,13 +10,15 @@ import {
   IconButton,
   HStack,
   Spinner,
-  useToast,
 } from '@chakra-ui/react'
 import { AddIcon, CloseIcon } from '@chakra-ui/icons'
 import SideBar from './sidebar'
-import { DEFAULT_ADMIN_ROLE } from 'const'
-import { roleNFTService } from 'services/blockchain/roleNFTService'
 import { useWeb3React } from '@web3-react/core'
+import {
+  fetchAddr,
+  handleAddAdmin,
+  handleDeleteAdmin,
+} from 'services/api/adminApi'
 
 function Admin() {
   const [address, setAddress] = useState('')
@@ -24,89 +26,22 @@ function Admin() {
   const [isLoading, setIsLoading] = useState(false)
   const { account } = useWeb3React()
 
-  const toast = useToast()
-  const fetchAddressByID = async (ID) => {
-    return new Promise((resolve, reject) => {
-      ;(async () => {
-        try {
-          const accountAddr = await roleNFTService.getRoleMember(
-            DEFAULT_ADMIN_ROLE,
-            ID,
-          )
-          console.log(accountAddr)
-
-          resolve(accountAddr)
-        } catch (e) {
-          reject()
-        }
-      })()
-    })
-  }
-
   const fetchAddress = async () => {
     setIsLoading(true)
-    const count = await roleNFTService.getRoleMemberCount(DEFAULT_ADMIN_ROLE)
-    console.log(count)
-    const promises = []
-    for (let i = 0; i < count; i++) {
-      promises.push(fetchAddressByID(i))
-    }
-    const result = await Promise.allSettled(promises)
-    const _address = result.map((item) => item.value)
-    console.log(_address)
-
-    setAdmins(_address)
+    const _addresses = await fetchAddr()
+    setAdmins(_addresses || [])
     setIsLoading(false)
   }
 
-  const handleAdd = async () => {
-    if (address === '') {
-      toast({
-        title: `Please input the account address.`,
-        position: 'top-right',
-        isClosable: true,
-      })
-      return
-    }
+  const handleAdd = useCallback(
+    () => handleAddAdmin({ account, address, fetchAddress }),
+    [account, address],
+  )
 
-    const hash = await roleNFTService.addAdmin(account, address)
-    if (hash) {
-      fetchAddress()
-      toast({
-        title: `New address is added successfully`,
-        position: 'top-right',
-        isClosable: true,
-      })
-    } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
-    }
-  }
-  const handleDelete = async (_address) => {
-    const hash = await roleNFTService.revokeRole(
-      account,
-      DEFAULT_ADMIN_ROLE,
-      _address,
-    )
-    if (hash) {
-      fetchAddress()
-      toast({
-        title: `Address is deleted successfully`,
-        position: 'top-right',
-        isClosable: true,
-      })
-    } else {
-      toast({
-        title: 'Error occurs in the BlockChain',
-        position: 'top-right',
-        isClosable: true,
-      })
-    }
-  }
-
+  const handleDelete = useCallback(
+    (_address) => handleDeleteAdmin({ account, _address, fetchAddress }),
+    [account],
+  )
   useEffect(() => {
     fetchAddress()
   }, [])

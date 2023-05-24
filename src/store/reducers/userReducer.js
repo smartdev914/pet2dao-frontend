@@ -19,7 +19,7 @@ const userReducer = (state = initialState, action) => {
         id: action.payload.id,
         name: action.payload.name,
         isAdmin: action.payload.isAdmin,
-        approvePermission: action.payload.approvePermission,
+        approvePermission: action.payload.approvePermission || [],
         isManager: action.payload.isManager,
         isApproved: action.payload.isApproved,
         department: action.payload.department,

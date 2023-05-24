@@ -1,33 +1,21 @@
-import axios from 'axios'
 import { actionTypes } from './types'
-import config from 'config/index'
 import { fetchFromIPFS } from 'services/api/uploader'
+import { api } from 'services/api/useApi'
 
 const createProposal = (employeeId, contentURL, isPublic) => {
-  const token = JSON.parse(localStorage.getItem('token'))
-
   return async () => {
-    const options = {
-      method: 'POST',
-      url: `${config.apiEndpoint}/api/proposal/create`,
-      headers: {
-        'content-type': 'application/json',
-        Authorization: token,
-      },
-      data: {
+    await api
+      .post(`/proposal/create`, {
         employeeId,
         contentURL,
         isPublic,
-      },
-    }
-    await axios
-      .request(options)
+      })
       .then(function (response) {
-        console.log(response)
+        console.log('New Proposal Created', response)
         // dispatch(getAllPublicProposal())
       })
       .catch(function (error) {
-        console.error(error)
+        console.error('Proposal Creation Error:', error)
       })
   }
 }
@@ -43,7 +31,7 @@ const fetchProposal = async (proposal) => {
         }
         resolve(_proposal)
       } catch (e) {
-        console.log(e)
+        console.log('Fetch Propoal Error:', e)
       }
     })()
   })
@@ -51,15 +39,8 @@ const fetchProposal = async (proposal) => {
 
 const getAllPublicProposal = () => {
   return async (dispatch) => {
-    const options = {
-      method: 'GET',
-      url: `${config.apiEndpoint}/api/proposal/getAllPublic`,
-      headers: {
-        'content-type': 'application/json',
-      },
-    }
-    await axios
-      .request(options)
+    await api
+      .get(`/proposal/getAllPublic`)
       .then(async (response) => {
         const promises = []
         response.data.forEach((item) => {
@@ -72,25 +53,15 @@ const getAllPublicProposal = () => {
         })
       })
       .catch(function (error) {
-        console.error(error)
+        console.error('Get Public Proposal Error: ', error)
       })
   }
 }
 
 const getAllPrivateProposal = () => {
   return async (dispatch) => {
-    const token = JSON.parse(localStorage.getItem('token'))
-
-    const options = {
-      method: 'GET',
-      url: `${config.apiEndpoint}/api/proposal/getAllPrivate`,
-      headers: {
-        'content-type': 'application/json',
-        Authorization: token,
-      },
-    }
-    await axios
-      .request(options)
+    await api
+      .get(`/proposal/getAllPrivate`)
       .then(async (response) => {
         const promises = []
         response.data.forEach((item) => {
@@ -103,7 +74,7 @@ const getAllPrivateProposal = () => {
         })
       })
       .catch(function (error) {
-        console.error(error)
+        console.error('Get Private Proposal Error : ', error)
       })
   }
 }

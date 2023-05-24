@@ -9,7 +9,7 @@
   "chainBlockExplorerUrls": ["https://arbiscan.io/"], 
   "pinataApiKey": "b1e113c1fb3b69ab3f19",
   "pinataSecretApiKey": "c0493a1d8b9a399f4cd12f709c63a4836c4973c23f0ef818a9a538473d86370f",
-  "apiEndpoint": "http://ec2-3-16-203-188.us-east-2.compute.amazonaws.com",
+  "apiEndpoint": "http://ec2-3-16-203-188.us-east-2.compute.amazonaws.com/api",
   "baseUrl": "https://gateway.pinata.cloud/ipfs/"
 }
 

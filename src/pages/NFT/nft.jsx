@@ -13,9 +13,9 @@ import {
   Spinner,
 } from '@chakra-ui/react'
 import SideBar from './sidebar'
-import { client } from 'services/api/useApi'
+import { api } from 'services/api/useApi'
 import { roleNFTService } from 'services/blockchain/roleNFTService'
-import { findOneByAccountAddr } from 'store/actions/employeeAction'
+import { fetchNFTByID } from 'services/api/adminApi'
 
 function ViewNFT() {
   const [pendingNFT, setPendingNFT] = useState([])
@@ -23,14 +23,8 @@ function ViewNFT() {
   const [isLoading, setIsLoading] = useState([])
 
   const fetchPendingNFT = async () => {
-    const token = JSON.parse(localStorage.getItem('token'))
-    const customOption = {
-      headers: {
-        Authorization: token,
-      },
-    }
-
-    client('/api/nft/findAll', 'GET', customOption)
+    api
+      .get('/nft/findAll')
       .then(function (response) {
         if (response.status === 200) {
           setPendingNFT(response.data)
@@ -39,26 +33,6 @@ function ViewNFT() {
       .catch(function (error) {
         console.error(error)
       })
-  }
-
-  const fetchNFTByID = async (ID) => {
-    return new Promise((resolve, reject) => {
-      ;(async () => {
-        try {
-          const tokenURI = await roleNFTService.tokenURI(ID)
-          const hash = tokenURI.split('/')[tokenURI.split('/').length - 1]
-          const accountAddr = await roleNFTService.ownerOf(ID)
-          const employee = await findOneByAccountAddr(accountAddr)
-          const _nft = {
-            metaDataURI: hash,
-            employee: employee,
-          }
-          resolve(_nft)
-        } catch (e) {
-          reject()
-        }
-      })()
-    })
   }
 
   const fetchMintedNFT = async () => {
