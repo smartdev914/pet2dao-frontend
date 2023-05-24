@@ -152,7 +152,7 @@ function Employee() {
 
   const handleEditEmployee = (employee) => {
     setSelectedEmployee(employee)
-    console.log(selectedEmployee)
+    console.log('Selected Employee', selectedEmployee)
     editDisclosure.onOpen()
   }
 

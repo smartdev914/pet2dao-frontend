@@ -51,13 +51,6 @@ const getAllEmployee = () => {
   }
 }
 
-const findOneByAccountAddr = async (accountAddr) => {
-  const respones = await api.get(
-    `/employee/findOneByAccountAddr/${accountAddr}`,
-  )
-  return respones.data
-}
-
 const createEmployee = (data) => {
   return async (dispatch) => {
     await api
@@ -126,5 +119,4 @@ export {
   createEmployee,
   updateEmployee,
   deleteEmployee,
-  findOneByAccountAddr,
 }

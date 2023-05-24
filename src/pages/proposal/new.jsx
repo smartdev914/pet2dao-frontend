@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import SideBar from './sidebar'
 import { uploadProposaltoIPFS } from 'services/api/uploader'
 import { daoService } from 'services/blockchain/DAOService'
-import { api } from 'services/api/useApi'
+import { encrypt } from 'services/api/proposalApi'
 import { createProposal } from 'store/actions/proposalAction'
 import { toastSuccess, toastError } from 'utils/log'
 
@@ -58,17 +58,6 @@ function NewProposal() {
         })
       }
       reader.readAsDataURL(file)
-    }
-  }
-
-  const encrypt = async (text) => {
-    try {
-      const response = await api.post('/api/proposal/encrypt', {
-        text: text,
-      })
-      return response.data.text
-    } catch (e) {
-      console.log(e)
     }
   }
 

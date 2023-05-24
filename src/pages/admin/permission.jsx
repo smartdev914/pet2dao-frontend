@@ -17,6 +17,7 @@ import { daoService } from 'services/blockchain/DAOService'
 import { api } from 'services/api/useApi'
 import PermissionTabPanel from 'components/PermissionTabPanel'
 import { toastSuccess, toastBlockchainError } from 'utils/log'
+import { getAllPermissions } from 'services/api/adminApi'
 
 function Permission() {
   const [isLoading, setIsLoading] = useState(false)
@@ -27,56 +28,9 @@ function Permission() {
 
   const { account } = useWeb3React()
 
-  const fetchPermissionByKeccak256 = async (_keccak256) => {
-    return new Promise((resolve, reject) => {
-      ;(async () => {
-        try {
-          const _permission = await api.get(
-            `/permission/findOneByKeccak256/${_keccak256}`,
-          )
-          resolve(_permission.data)
-        } catch (e) {
-          reject()
-        }
-      })()
-    })
-  }
-
-  const getAllPermissions = async () => {
+  const setAllPermissions = async () => {
     setIsLoading(true)
-    const hash0 = await daoService.getPermissionsOfLevel(0)
-    const promises0 = []
-    for (let i = 0; i < hash0.length; i++) {
-      promises0.push(fetchPermissionByKeccak256(hash0[i]))
-    }
-    const permission0 = await Promise.all(promises0)
-
-    const hash1 = await daoService.getPermissionsOfLevel(1)
-    const promises1 = []
-    for (let i = 0; i < hash1.length; i++) {
-      promises1.push(fetchPermissionByKeccak256(hash1[i]))
-    }
-    const permission1 = await Promise.all(promises1)
-
-    const hash2 = await daoService.getPermissionsOfLevel(2)
-    const promises2 = []
-    for (let i = 0; i < hash2.length; i++) {
-      promises2.push(fetchPermissionByKeccak256(hash2[i]))
-    }
-    const permission2 = await Promise.all(promises2)
-
-    const hash3 = await daoService.getPermissionsOfLevel(3)
-    const promises3 = []
-    for (let i = 0; i < hash3.length; i++) {
-      promises3.push(fetchPermissionByKeccak256(hash3[i]))
-    }
-    const permission3 = await Promise.all(promises3)
-    setPermissions({
-      level0: permission0,
-      level1: permission1,
-      level2: permission2,
-      level3: permission3,
-    })
+    setPermissions(getAllPermissions())
     setIsLoading(false)
   }
 
@@ -124,7 +78,7 @@ function Permission() {
         currentRole,
         currentLevel,
       )
-      getAllPermissions()
+      setAllPermissions()
     } else {
       toastBlockchainError()
     }
@@ -137,7 +91,7 @@ function Permission() {
         .delete(`/permission/delete/${id}`)
         .then(function (response) {
           if (response.data) {
-            getAllPermissions()
+            setAllPermissions()
             toastSuccess(`Permission deleted Successfully.`)
           }
         })
@@ -150,7 +104,7 @@ function Permission() {
   }
 
   useEffect(() => {
-    getAllPermissions()
+    setAllPermissions()
   }, [])
 
   return (

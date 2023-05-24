@@ -17,6 +17,8 @@ import { DEFAULT_ADMIN_ROLE } from 'constants'
 import { roleNFTService } from 'services/blockchain/roleNFTService'
 import { useWeb3React } from '@web3-react/core'
 import { toastSuccess, toastError, toastBlockchainError } from 'utils/log'
+import { validateEthAddr } from 'utils/utils'
+import { fetchAddr } from 'services/api/adminApi'
 
 function Admin() {
   const [address, setAddress] = useState('')
@@ -24,37 +26,10 @@ function Admin() {
   const [isLoading, setIsLoading] = useState(false)
   const { account } = useWeb3React()
 
-  const fetchAddressByID = async (ID) => {
-    return new Promise((resolve, reject) => {
-      ;(async () => {
-        try {
-          const accountAddr = await roleNFTService.getRoleMember(
-            DEFAULT_ADMIN_ROLE,
-            ID,
-          )
-          console.log(accountAddr)
-
-          resolve(accountAddr)
-        } catch (e) {
-          reject()
-        }
-      })()
-    })
-  }
-
   const fetchAddress = async () => {
     setIsLoading(true)
-    const count = await roleNFTService.getRoleMemberCount(DEFAULT_ADMIN_ROLE)
-    console.log(count)
-    const promises = []
-    for (let i = 0; i < count; i++) {
-      promises.push(fetchAddressByID(i))
-    }
-    const result = await Promise.allSettled(promises)
-    const _address = result.map((item) => item.value)
-    console.log(_address)
-
-    setAdmins(_address)
+    const _addresses = await fetchAddr()
+    setAdmins(_addresses || [])
     setIsLoading(false)
   }
 
@@ -62,6 +37,12 @@ function Admin() {
     if (address === '') {
       toastError(`Please input the account address.`)
       return
+    } else {
+      const validation = validateEthAddr(address)
+      if (validation !== null) {
+        toastError(validation)
+        return
+      }
     }
 
     const hash = await roleNFTService.addAdmin(account, address)

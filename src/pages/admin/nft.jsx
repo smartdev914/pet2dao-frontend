@@ -16,13 +16,8 @@ import { useWeb3React } from '@web3-react/core'
 import SideBar from './sidebar'
 import { api } from 'services/api/useApi'
 import { roleNFTService } from 'services/blockchain/roleNFTService'
-import { findOneByAccountAddr } from 'store/actions/employeeAction'
-import {
-  toastSuccess,
-  toastError,
-  toastBlockchainError,
-  toastServerError,
-} from 'utils/log'
+import { toastSuccess, toastError, toastBlockchainError } from 'utils/log'
+import { updateDBNFT, fetchNFTByID } from 'services/api/adminApi'
 
 function NFT() {
   const [pendingNFT, setPendingNFT] = useState([])
@@ -39,22 +34,7 @@ function NFT() {
         }
       })
       .catch(function (error) {
-        console.error(error)
-      })
-  }
-
-  const updateDBNFT = async (id, customData) => {
-    api
-      .put(`/nft/update/${id}`, customData)
-      .then(function (response) {
-        if (response.status === 200) {
-          toastSuccess(`NFT minted Successfully.`)
-        } else {
-          toastServerError()
-        }
-      })
-      .catch(function (error) {
-        console.error(error)
+        console.error('Fetch Pending NFT Error:', error)
       })
   }
 
@@ -79,7 +59,7 @@ function NFT() {
 
   const handleBurn = async (tokenId) => {
     if (!tokenId || tokenId < 1) {
-      toastError('Invalid TokenId')
+      toastError('Invalid Token Id')
       return
     }
 
@@ -87,33 +67,12 @@ function NFT() {
     const hash = await roleNFTService.burnNFT(account, tokenId)
     if (hash) {
       await fetchMintedNFT()
-      toastSuccess(`NFT is burnt successfully`)
+      toastSuccess(`NFT is successfully burnt.`)
     } else {
-      console.log(hash)
-      toastError(`Error occurs in the BlockChain`)
+      console.log('Hash', hash)
+      toastBlockchainError()
     }
     setIsLoading(false)
-  }
-
-  const fetchNFTByID = async (ID) => {
-    return new Promise((resolve, reject) => {
-      ;(async () => {
-        try {
-          const tokenURI = await roleNFTService.tokenURI(ID)
-          const hash = tokenURI.split('/')[tokenURI.split('/').length - 1]
-          const accountAddr = await roleNFTService.ownerOf(ID)
-          const employee = await findOneByAccountAddr(accountAddr)
-          const _nft = {
-            metaDataURI: hash,
-            employee: employee,
-            id: ID,
-          }
-          resolve(_nft)
-        } catch (e) {
-          reject()
-        }
-      })()
-    })
   }
 
   const fetchMintedNFT = async () => {
